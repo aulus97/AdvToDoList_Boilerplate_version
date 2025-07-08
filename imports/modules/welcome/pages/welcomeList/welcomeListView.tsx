@@ -3,25 +3,25 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { SysFab } from '/imports/ui/components/sysFab/sysFab';
-import { AniversarioListControllerContext } from './aniversarioListController';
+import { WelcomeListControllerContext } from './welcomeListController';
 import { useNavigate } from 'react-router-dom';
 import { ComplexTable } from '/imports/ui/components/ComplexTable/ComplexTable';
 import DeleteDialog from '/imports/ui/appComponents/showDialog/custom/deleteDialog/deleteDialog';
-import AniversarioListStyles from './aniversarioListStyles';
+import WelcomeListStyles from './welcomeListStyles';
 import SysTextField from '/imports/ui/components/sysFormFields/sysTextField/sysTextField';
 import SysIcon from '/imports/ui/components/sysIcon/sysIcon';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
 
 
-const AniversarioListView = () => {
-	const controller = useContext(AniversarioListControllerContext);
+const WelcomeListView = () => {
+	const controller = useContext(WelcomeListControllerContext);
 	const sysLayoutContext = useContext<IAppLayoutContext>(AppLayoutContext);
 	const navigate = useNavigate();
   const {
     Container,
     LoadingContainer,
     SearchContainer
-  } = AniversarioListStyles;
+  } = WelcomeListStyles;
 
 	return (
 		<Container>
@@ -42,11 +42,11 @@ const AniversarioListView = () => {
 			) : (
 				<Box sx={{ width: '100%' }}>
 					<ComplexTable
-						data={controller.aniversarioList}
+						data={controller.welcomeList}
 						schema={controller.schema}
-						onRowClick={(row) => navigate('/aniversario/view/' + row.id)}
-						searchPlaceholder={'Pesquisar aniversario'}
-						onEdit={(row) => navigate('/aniversario/edit/' + row._id)}
+						onRowClick={(row) => navigate('/welcome/view/' + row.id)}
+						searchPlaceholder={'Pesquisar welcome'}
+						onEdit={(row) => navigate('/welcome/edit/' + row._id)}
 						onDelete={(row) => {
 							DeleteDialog({
 								showDialog: sysLayoutContext.showDialog,
@@ -76,4 +76,4 @@ const AniversarioListView = () => {
 	);
 };
 
-export default AniversarioListView;
+export default WelcomeListView;

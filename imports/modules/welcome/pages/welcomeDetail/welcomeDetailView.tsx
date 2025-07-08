@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { AniversarioDetailControllerContext } from './aniversarioDetailContoller';
-import { AniversarioModuleContext } from '../../aniversarioContainer';
-import AniversarioDetailStyles from './aniversarioDetailStyles';
+import { WelcomeDetailControllerContext } from './welcomeDetailContoller';
+import { WelcomeModuleContext } from '../../welcomeContainer';
+import WelcomeDetailStyles from './welcomeDetailStyles';
 import SysForm from '/imports/ui/components/sysForm/sysForm';
 import SysTextField from '/imports/ui/components/sysFormFields/sysTextField/sysTextField';
 import Typography from '@mui/material/Typography';
@@ -13,9 +13,9 @@ import SysFormButton from '/imports/ui/components/sysFormFields/sysFormButton/sy
 import SysIcon from '/imports/ui/components/sysIcon/sysIcon';
 import {SysDatePickerField} from "/imports/ui/components/sysFormFields/sysDatePickerField/sysDatePickerField";
 
-const AniversarioDetailView = () => {
-	const controller = useContext(AniversarioDetailControllerContext);
-	const { state } = useContext(AniversarioModuleContext);
+const WelcomeDetailView = () => {
+	const controller = useContext(WelcomeDetailControllerContext);
+	const { state } = useContext(WelcomeModuleContext);
 	const isView = state === 'view';
 	const isEdit = state === 'edit';
 	const isCreate = state === 'create';
@@ -26,7 +26,7 @@ const AniversarioDetailView = () => {
     Footer,
     FormColumn,
     Image
-  } = AniversarioDetailStyles;
+  } = WelcomeDetailStyles;
 
 	return (
 		<Container>
@@ -75,4 +75,4 @@ const AniversarioDetailView = () => {
 	);
 };
 
-export default AniversarioDetailView;
+export default WelcomeDetailView;

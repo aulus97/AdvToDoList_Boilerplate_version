@@ -1,18 +1,18 @@
 // region Imports
 import { Recurso } from '../config/recursos';
-import { aniversarioSch, IAniversario } from './aniversarioSch';
+import { welcomeSch, IWelcome } from './welcomeSch';
 import { ProductServerBase } from '/imports/api/productServerBase';
 
 // endregion
 
-class AniversarioServerApi extends ProductServerBase<IAniversario> {
+class WelcomeServerApi extends ProductServerBase<IWelcome> {
 	constructor() {
-		super('aniversario', aniversarioSch, { resources: Recurso });
+		super('welcome', welcomeSch, { resources: Recurso });
 
     const self = this;
 
 		this.addPublication(
-			'aniversarioList',
+			'welcomeList',
 			(filter = {}) => {
 				return this.defaultListCollectionPublication(filter, {
 					projection: { name: 1, birthday: 1, phone: 1, remember: 1, delivery: 1 }
@@ -20,7 +20,7 @@ class AniversarioServerApi extends ProductServerBase<IAniversario> {
 			},
 		);
 
-		this.addPublication('aniversarioDetail', (filter = {}) => {
+		this.addPublication('welcomeDetail', (filter = {}) => {
 			return this.defaultDetailCollectionPublication(filter, {
 				projection: { name: 1, birthday: 1, phone: 1, remember: 1, delivery: 1 }
 			});
@@ -59,4 +59,4 @@ class AniversarioServerApi extends ProductServerBase<IAniversario> {
 	}
 }
 
-export const aniversarioServerApi = new AniversarioServerApi();
+export const welcomeServerApi = new WelcomeServerApi();

@@ -2,7 +2,7 @@ import { IDoc } from '/imports/typings/IDoc';
 import { ISchema } from '/imports/typings/ISchema';
 import {hasValue} from "/imports/libs/hasValue";
 
-export const aniversarioSch: ISchema<IAniversario> = {
+export const welcomeSch: ISchema<IWelcome> = {
 	name: {
 		type: String,
 		label: 'Nome',
@@ -31,7 +31,7 @@ export const aniversarioSch: ISchema<IAniversario> = {
 		type: String,
 		label: 'Quando enviar',
 		optional: false,
-    visibilityFunction: (doc: IAniversario) => hasValue(doc.remember),
+    visibilityFunction: (doc: IWelcome) => hasValue(doc.remember),
 		options: () => [
 			{ value: '1', label: '1 dia antes' },
 			{ value: '2', label: '2 dias antes' },
@@ -40,7 +40,7 @@ export const aniversarioSch: ISchema<IAniversario> = {
 	}
 };
 
-export interface IAniversario extends IDoc {
+export interface IWelcome extends IDoc {
 	name: string;
   birthday: Date;
   phone: string;

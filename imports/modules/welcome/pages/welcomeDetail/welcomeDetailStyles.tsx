@@ -4,7 +4,7 @@ import Box, { BoxProps } from '@mui/material/Box';
 import { sysSizing } from '/imports/ui/materialui/styles';
 import {SysSectionPaddingXY} from "/imports/ui/layoutComponents/sysLayoutComponents";
 
-interface IAniversarioDetailStyles {
+interface IWelcomeDetailStyles {
 	Container: ElementType<BoxProps>;
 	Header: ElementType<BoxProps>;
 	Body: ElementType<BoxProps>;
@@ -13,7 +13,7 @@ interface IAniversarioDetailStyles {
 	Image: ElementType;
 }
 
-const AniversarioDetailStyles: IAniversarioDetailStyles = {
+const WelcomeDetailStyles: IWelcomeDetailStyles = {
 	Container: styled(SysSectionPaddingXY)(() => ({
     flex: 1,
 		display: 'flex',
@@ -67,4 +67,4 @@ const AniversarioDetailStyles: IAniversarioDetailStyles = {
   }))
 };
 
-export default AniversarioDetailStyles;
+export default WelcomeDetailStyles;

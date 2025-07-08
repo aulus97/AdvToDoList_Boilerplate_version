@@ -2,10 +2,10 @@ import React from 'react';
 import { IAppMenu } from '/imports/modules/modulesTypings';
 import SysIcon from '/imports/ui/components/sysIcon/sysIcon';
 
-export const aniversarioMenuItemList: (IAppMenu | null)[] = [
+export const welcomeMenuItemList: (IAppMenu | null)[] = [
 	{
-		path: '/aniversario',
-		name: 'Aniversários',
+		path: '/welcome',
+		name: 'Welcome',
 		icon: <SysIcon name={'star'} />
 	}
 ];

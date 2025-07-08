@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
-import AniversarioListView from './aniversarioListView';
+import WelcomeListView from './welcomeListView';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import { ISchema } from '/imports/typings/ISchema';
-import { IAniversario } from '../../api/aniversarioSch';
-import { aniversarioApi } from '../../api/aniversarioApi';
+import { IWelcome } from '../../api/welcomeSch';
+import { welcomeApi } from '../../api/welcomeApi';
 
 interface IInitialConfig {
 	sortProperties: { field: string; sortAscending: boolean };
@@ -14,18 +14,18 @@ interface IInitialConfig {
 	viewComplexTable: boolean;
 }
 
-interface IAniversarioListContollerContext {
+interface IWelcomeListContollerContext {
 	onAddButtonClick: () => void;
 	onDeleteButtonClick: (row: any) => void;
-	aniversarioList: IAniversario[];
+	welcomeList: IWelcome[];
 	schema: ISchema<any>;
 	loading: boolean;
 	onChangeTextField: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	onChangeCategory: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const AniversarioListControllerContext = React.createContext<IAniversarioListContollerContext>(
-	{} as IAniversarioListContollerContext
+export const WelcomeListControllerContext = React.createContext<IWelcomeListContollerContext>(
+	{} as IWelcomeListContollerContext
 );
 
 const initialConfig = {
@@ -35,10 +35,10 @@ const initialConfig = {
 	viewComplexTable: false
 };
 
-const AniversarioListController = () => {
+const WelcomeListController = () => {
 	const [config, setConfig] = React.useState<IInitialConfig>(initialConfig);
 
-	const { name, birthday, delivery } = aniversarioApi.getSchema();
+	const { name, birthday, delivery } = welcomeApi.getSchema();
 	const aniversarioSchReduzido = { birthday, name, delivery };
 	const navigate = useNavigate();
 
@@ -48,10 +48,10 @@ const AniversarioListController = () => {
 	};
 
 	const { loading, aniversarios } = useTracker(() => {
-		const subHandle = aniversarioApi.subscribe('aniversarioList', filter, {
+		const subHandle = welcomeApi.subscribe('welcomeList', filter, {
 			sort
 		});
-		const aniversarios = subHandle?.ready() ? aniversarioApi.find(filter, { sort }).fetch() : [];
+		const aniversarios = subHandle?.ready() ? welcomeApi.find(filter, { sort }).fetch() : [];
 		return {
 			aniversarios,
 			loading: !!subHandle && !subHandle.ready(),
@@ -61,11 +61,11 @@ const AniversarioListController = () => {
 
 	const onAddButtonClick = useCallback(() => {
 		const newDocumentId = nanoid();
-		navigate(`/aniversario/create/${newDocumentId}`);
+		navigate(`/welcome/create/${newDocumentId}`);
 	}, []);
 
 	const onDeleteButtonClick = useCallback((row: any) => {
-		aniversarioApi.remove(row);
+		welcomeApi.remove(row);
 	}, []);
 
 	const onChangeTextField = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,11 +94,11 @@ const AniversarioListController = () => {
 		setConfig((prev) => ({ ...prev, filter: { ...prev.filter, type: value } }));
 	}, []);
 
-	const providerValues: IAniversarioListContollerContext = useMemo(
+	const providerValues: IWelcomeListContollerContext = useMemo(
 		() => ({
 			onAddButtonClick,
 			onDeleteButtonClick,
-			aniversarioList: aniversarios,
+			welcomeList: aniversarios,
 			schema: aniversarioSchReduzido,
 			loading,
 			onChangeTextField,
@@ -108,10 +108,10 @@ const AniversarioListController = () => {
 	);
 
 	return (
-		<AniversarioListControllerContext.Provider value={providerValues}>
-			<AniversarioListView />
-		</AniversarioListControllerContext.Provider>
+		<WelcomeListControllerContext.Provider value={providerValues}>
+			<WelcomeListView />
+		</WelcomeListControllerContext.Provider>
 	);
 };
 
-export default AniversarioListController;
+export default WelcomeListController;
