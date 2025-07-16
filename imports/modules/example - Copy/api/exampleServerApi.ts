@@ -17,18 +17,14 @@ class ExampleServerApi extends ProductServerBase<IExample> {
 
 		this.addTransformedPublication(
 			'exampleList',
-			(filter = {}, options = {}) => {
+			(filter = {}) => {
 				return this.defaultListCollectionPublication(filter, {
-					...options,
-					projection: { title: 1, type: 1, typeMulti: 1, createdAt: 1, createdBy: 1 }
+					projection: { title: 1, type: 1, typeMulti: 1, createdAt: 1 }
 				});
 			},
 			async (doc: IExample & { nomeUsuario: string }) => {
-				if (!doc.createdBy) {
-					return doc;
-				}
-				const userProfileDoc = await userprofileServerApi.getCollectionInstance().findOneAsync({ _id: doc.createdBy }, {fields: {username: 1}});
-				return { ...doc, nomeUsuario: userProfileDoc?.username };
+				const userProfileDoc = await userprofileServerApi.getCollectionInstance().findOneAsync({ _id: doc.createdBy });
+				return { ...doc };
 			}
 		);
 

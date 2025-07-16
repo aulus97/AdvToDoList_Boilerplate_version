@@ -12,13 +12,11 @@ interface IInitialConfig {
 	filter: Object;
 	searchBy: string | null;
 	viewComplexTable: boolean;
-	limit: number;
 }
 
 interface IExampleListContollerContext {
 	onAddButtonClick: () => void;
 	onDeleteButtonClick: (row: any) => void;
-	onMyTasksButtonClick?: () => void;
 	todoList: IExample[];
 	schema: ISchema<any>;
 	loading: boolean;
@@ -30,12 +28,11 @@ export const ExampleListControllerContext = React.createContext<IExampleListCont
 	{} as IExampleListContollerContext
 );
 
-const initialConfig: IInitialConfig = {
-	sortProperties: { field: 'createdAt', sortAscending: false },
+const initialConfig = {
+	sortProperties: { field: 'createdAt', sortAscending: true },
 	filter: {},
 	searchBy: null,
-	viewComplexTable: false,
-	limit: 5
+	viewComplexTable: false
 };
 
 const ExampleListController = () => {
@@ -45,18 +42,17 @@ const ExampleListController = () => {
 	const exampleSchReduzido = { title, type, typeMulti, createdAt: { type: Date, label: 'Criado em' } };
 	const navigate = useNavigate();
 
-	const { sortProperties, filter, limit } = config;
+	const { sortProperties, filter } = config;
 	const sort = {
 		[sortProperties.field]: sortProperties.sortAscending ? 1 : -1
 	};
 
 	const { loading, examples } = useTracker(() => {
 		const subHandle = exampleApi.subscribe('exampleList', filter, {
-			sort,
-			limit
+			sort
 		});
 
-		const examples = subHandle?.ready() ? exampleApi.find(filter, { sort, limit }).fetch() : [];
+		const examples = subHandle?.ready() ? exampleApi.find(filter, { sort }).fetch() : [];
 		return {
 			examples,
 			loading: !!subHandle && !subHandle.ready(),
@@ -71,10 +67,6 @@ const ExampleListController = () => {
 
 	const onDeleteButtonClick = useCallback((row: any) => {
 		exampleApi.remove(row);
-	}, []);
-
-	const onMyTasksButtonClick = useCallback(() => {
-		navigate('/sysFormTests/');
 	}, []);
 
 	const onChangeTextField = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {

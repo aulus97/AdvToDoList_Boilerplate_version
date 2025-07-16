@@ -23,14 +23,7 @@ const ExampleListView = () => {
 
 	return (
 		<Container>
-			<SearchContainer sx={{ alignItems: 'center' }}>
-				<Typography variant="h5">Atividades recentes</Typography>
-				<SysFab
-					text="Minhas Tarefas"
-					startIcon={<SysIcon name={'task'} />}
-					onClick={()=>navigate('/sysFormTests')}
-				/>
-			</SearchContainer>
+			<Typography variant="h5">Lista de Itens</Typography>
 			<SearchContainer>
 				<SysTextField
 					name="search"
@@ -40,6 +33,7 @@ const ExampleListView = () => {
 				/>
 				<SysSelectField
 					name="Category"
+					label="Categoria"
 					options={options}
 					placeholder="Selecionar"
 					onChange={controller.onChangeCategory}
@@ -57,11 +51,32 @@ const ExampleListView = () => {
 						schema={controller.schema}
 						onRowClick={(row) => navigate('/example/view/' + row.id)}
 						searchPlaceholder={'Pesquisar exemplo'}
+						onEdit={(row) => navigate('/example/edit/' + row._id)}
+						onDelete={(row) => {
+							DeleteDialog({
+								showDialog: sysLayoutContext.showDialog,
+								closeDialog: sysLayoutContext.closeDialog,
+								title: `Excluir dado ${row.title}`,
+								message: `Tem certeza que deseja excluir o arquivo ${row.title}?`,
+								onDeleteConfirm: () => {
+									controller.onDeleteButtonClick(row);
+									sysLayoutContext.showNotification({
+										message: 'Excluído com sucesso!'
+									});
+								}
+							});
+						}}
 					/>
 				</Box>
 			)}
 
-
+			<SysFab
+				variant="extended"
+				text="Adicionar"
+				startIcon={<SysIcon name={'add'} />}
+				fixed={true}
+				onClick={controller.onAddButtonClick}
+			/>
 		</Container>
 	);
 };
