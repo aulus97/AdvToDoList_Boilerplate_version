@@ -1,24 +1,26 @@
 import { ElementType } from 'react';
 import { styled } from '@mui/material/styles';
 import Box, { BoxProps } from '@mui/material/Box';
-import { sysSizing } from '../../../../ui/materialui/styles';
-import { SysSectionPaddingXY } from '../../../../ui/layoutComponents/sysLayoutComponents';
+import { sysSizing } from '/imports/ui/materialui/styles';
+import {SysSectionPaddingXY} from "/imports/ui/layoutComponents/sysLayoutComponents";
 
-interface IExampleDetailStyles {
+interface IAniversarioDetailStyles {
 	Container: ElementType<BoxProps>;
 	Header: ElementType<BoxProps>;
 	Body: ElementType<BoxProps>;
 	Footer: ElementType<BoxProps>;
 	FormColumn: ElementType<BoxProps>;
+	Image: ElementType;
 }
 
-const ExampleDetailStyles: IExampleDetailStyles = {
+const AniversarioDetailStyles: IAniversarioDetailStyles = {
 	Container: styled(SysSectionPaddingXY)(() => ({
+    flex: 1,
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
 		alignItems: 'flex-start',
-		gap: sysSizing.spacingFixedMd
+		gap: sysSizing.spacingFixedLg
 	})),
 	Header: styled(Box)({
 		display: 'flex',
@@ -35,7 +37,7 @@ const ExampleDetailStyles: IExampleDetailStyles = {
 		width: '100%',
 		gap: '64px',
 		[theme.breakpoints.down('md')]: {
-			flexDirection: 'column',
+			flexDirection: 'column-reverse',
 			gap: sysSizing.spacingFixedMd
 		}
 	})),
@@ -46,7 +48,7 @@ const ExampleDetailStyles: IExampleDetailStyles = {
 		alignItems: 'center',
 		width: '100%',
 		gap: sysSizing.spacingRemMd,
-		marginTop: '40px'
+		marginTop: 'auto'
 	}),
 	FormColumn: styled(Box)({
 		width: '100%',
@@ -55,7 +57,14 @@ const ExampleDetailStyles: IExampleDetailStyles = {
 		justifyContent: 'flex-start',
 		alignItems: 'flex-start',
 		gap: sysSizing.spacingFixedLg
-	})
+	}),
+  Image: styled('img')(({theme}) => ({
+    width: '100%',
+    [theme.breakpoints.down('md')]: {
+      maxWidth: '500px',
+      margin: 'auto'
+    }
+  }))
 };
 
-export default ExampleDetailStyles;
+export default AniversarioDetailStyles;

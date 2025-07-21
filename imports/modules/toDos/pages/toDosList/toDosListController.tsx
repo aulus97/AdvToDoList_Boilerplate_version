@@ -1,80 +1,72 @@
 import React, { useCallback, useMemo } from 'react';
-import ExampleListView from './exampleListView';
+import ToDosListView from './toDosListView';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
 import { ISchema } from '../../../../typings/ISchema';
-import { IExample } from '../../api/exampleSch';
-import { exampleApi } from '../../api/exampleApi';
+import { IToDos } from '../../api/toDosSch';
+import { toDosApi } from '../../api/toDosApi';
 
 interface IInitialConfig {
 	sortProperties: { field: string; sortAscending: boolean };
 	filter: Object;
 	searchBy: string | null;
 	viewComplexTable: boolean;
-	limit: number;
 }
 
-interface IExampleListContollerContext {
+interface IToDosListContollerContext {
 	onAddButtonClick: () => void;
 	onDeleteButtonClick: (row: any) => void;
-	onMyTasksButtonClick?: () => void;
-	todoList: IExample[];
+	todoList: IToDos[];
 	schema: ISchema<any>;
 	loading: boolean;
 	onChangeTextField: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	onChangeCategory: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const ExampleListControllerContext = React.createContext<IExampleListContollerContext>(
-	{} as IExampleListContollerContext
+export const ToDosListControllerContext = React.createContext<IToDosListContollerContext>(
+	{} as IToDosListContollerContext
 );
 
-const initialConfig: IInitialConfig = {
-	sortProperties: { field: 'createdAt', sortAscending: false },
+const initialConfig = {
+	sortProperties: { field: 'createdAt', sortAscending: true },
 	filter: {},
 	searchBy: null,
-	viewComplexTable: false,
-	limit: 5
+	viewComplexTable: false
 };
 
-const ExampleListController = () => {
+const ToDosListController = () => {
 	const [config, setConfig] = React.useState<IInitialConfig>(initialConfig);
 
-	const { title, type, typeMulti } = exampleApi.getSchema();
-	const exampleSchReduzido = { title, type, typeMulti, createdAt: { type: Date, label: 'Criado em' } };
+	const { title, type, typeMulti } = toDosApi.getSchema();
+	const toDosSchReduzido = { title, type, typeMulti, createdAt: { type: Date, label: 'Criado em' } };
 	const navigate = useNavigate();
 
-	const { sortProperties, filter, limit } = config;
+	const { sortProperties, filter } = config;
 	const sort = {
 		[sortProperties.field]: sortProperties.sortAscending ? 1 : -1
 	};
 
-	const { loading, examples } = useTracker(() => {
-		const subHandle = exampleApi.subscribe('exampleList', filter, {
-			sort,
-			limit
+	const { loading, toDoss } = useTracker(() => {
+		const subHandle = toDosApi.subscribe('toDosList', filter, {
+			sort
 		});
 
-		const examples = subHandle?.ready() ? exampleApi.find(filter, { sort, limit }).fetch() : [];
+		const toDoss = subHandle?.ready() ? toDosApi.find(filter, { sort }).fetch() : [];
 		return {
-			examples,
+			toDoss,
 			loading: !!subHandle && !subHandle.ready(),
-			total: subHandle ? subHandle.total : examples.length
+			total: subHandle ? subHandle.total : toDoss.length
 		};
 	}, [config]);
 
 	const onAddButtonClick = useCallback(() => {
 		const newDocumentId = nanoid();
-		navigate(`/example/create/${newDocumentId}`);
+		navigate(`/toDos/create/${newDocumentId}`);
 	}, []);
 
 	const onDeleteButtonClick = useCallback((row: any) => {
-		exampleApi.remove(row);
-	}, []);
-
-	const onMyTasksButtonClick = useCallback(() => {
-		navigate('/sysFormTests/');
+		toDosApi.remove(row);
 	}, []);
 
 	const onChangeTextField = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,24 +95,24 @@ const ExampleListController = () => {
 		setConfig((prev) => ({ ...prev, filter: { ...prev.filter, type: value } }));
 	}, []);
 
-	const providerValues: IExampleListContollerContext = useMemo(
+	const providerValues: IToDosListContollerContext = useMemo(
 		() => ({
 			onAddButtonClick,
 			onDeleteButtonClick,
-			todoList: examples,
-			schema: exampleSchReduzido,
+			todoList: toDoss,
+			schema: toDosSchReduzido,
 			loading,
 			onChangeTextField,
 			onChangeCategory: onSelectedCategory
 		}),
-		[examples, loading]
+		[toDoss, loading]
 	);
 
 	return (
-		<ExampleListControllerContext.Provider value={providerValues}>
-			<ExampleListView />
-		</ExampleListControllerContext.Provider>
+		<ToDosListControllerContext.Provider value={providerValues}>
+			<ToDosListView />
+		</ToDosListControllerContext.Provider>
 	);
 };
 
-export default ExampleListController;
+export default ToDosListController;

@@ -2,35 +2,28 @@ import React, { useContext } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ExampleListControllerContext } from './exampleListController';
+import { ToDosListControllerContext } from './toDosListController';
 import { useNavigate } from 'react-router-dom';
 import { ComplexTable } from '../../../../ui/components/ComplexTable/ComplexTable';
 import DeleteDialog from '../../../../ui/appComponents/showDialog/custom/deleteDialog/deleteDialog';
-import ExampleListStyles from './exampleListStyles';
+import ToDosListStyles from './toDosListStyles';
 import SysTextField from '../../../../ui/components/sysFormFields/sysTextField/sysTextField';
 import { SysSelectField } from '../../../../ui/components/sysFormFields/sysSelectField/sysSelectField';
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { SysFab } from '../../../../ui/components/sysFab/sysFab';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
 
-const ExampleListView = () => {
-	const controller = React.useContext(ExampleListControllerContext);
+const ToDosListView = () => {
+	const controller = React.useContext(ToDosListControllerContext);
 	const sysLayoutContext = useContext<IAppLayoutContext>(AppLayoutContext);
 	const navigate = useNavigate();
-	const { Container, LoadingContainer, SearchContainer } = ExampleListStyles;
+	const { Container, LoadingContainer, SearchContainer } = ToDosListStyles;
 
 	const options = [{ value: '', label: 'Nenhum' }, ...(controller.schema.type.options?.() ?? [])];
 
 	return (
 		<Container>
-			<SearchContainer sx={{ alignItems: 'center' }}>
-				<Typography variant="h5">Atividades recentes</Typography>
-				<SysFab
-					text="Minhas Tarefas"
-					startIcon={<SysIcon name={'task'} />}
-					onClick={()=>navigate('/sysFormTests')}
-				/>
-			</SearchContainer>
+			<Typography variant="h5">Lista de Itens</Typography>
 			<SearchContainer>
 				<SysTextField
 					name="search"
@@ -40,6 +33,7 @@ const ExampleListView = () => {
 				/>
 				<SysSelectField
 					name="Category"
+					label="Categoria"
 					options={options}
 					placeholder="Selecionar"
 					onChange={controller.onChangeCategory}
@@ -55,15 +49,36 @@ const ExampleListView = () => {
 					<ComplexTable
 						data={controller.todoList}
 						schema={controller.schema}
-						onRowClick={(row) => navigate('/example/view/' + row.id)}
+						onRowClick={(row) => navigate('/toDos/view/' + row.id)}
 						searchPlaceholder={'Pesquisar exemplo'}
+						onEdit={(row) => navigate('/toDos/edit/' + row._id)}
+						onDelete={(row) => {
+							DeleteDialog({
+								showDialog: sysLayoutContext.showDialog,
+								closeDialog: sysLayoutContext.closeDialog,
+								title: `Excluir dado ${row.title}`,
+								message: `Tem certeza que deseja excluir o arquivo ${row.title}?`,
+								onDeleteConfirm: () => {
+									controller.onDeleteButtonClick(row);
+									sysLayoutContext.showNotification({
+										message: 'Excluído com sucesso!'
+									});
+								}
+							});
+						}}
 					/>
 				</Box>
 			)}
 
-
+			<SysFab
+				variant="extended"
+				text="Adicionar"
+				startIcon={<SysIcon name={'add'} />}
+				fixed={true}
+				onClick={controller.onAddButtonClick}
+			/>
 		</Container>
 	);
 };
 
-export default ExampleListView;
+export default ToDosListView;

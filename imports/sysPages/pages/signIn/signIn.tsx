@@ -20,7 +20,7 @@ const SignInPage: React.FC = () => {
 
 	const handleSubmit = ({ email, password }: { email: string; password: string }) => {
 		signIn(email, password, (err) => {
-			if (!err) navigate('/welcome');
+			if (!err) navigate('/');
 			showNotification({
 				type: 'error',
 				title: 'Erro ao tentar logar',
@@ -32,7 +32,7 @@ const SignInPage: React.FC = () => {
 	const handleForgotPassword = () => navigate('/password-recovery');
 
 	useEffect(() => {
-		if (user) navigate('/welcome');
+		if (user) navigate('/');
 	}, [user]);
 
 	return (

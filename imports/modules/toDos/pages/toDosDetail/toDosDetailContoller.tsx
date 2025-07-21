@@ -1,37 +1,37 @@
 import React, { createContext, useCallback, useContext } from 'react';
-import ExampleDetailView from './exampleDetailView';
+import ToDosDetailView from './toDosDetailView';
 import { useNavigate } from 'react-router-dom';
-import { ExampleModuleContext } from '../../exampleContainer';
+import { ToDosModuleContext } from '../../toDosContainer';
 import { useTracker } from 'meteor/react-meteor-data';
-import { exampleApi } from '../../api/exampleApi';
-import { IExample } from '../../api/exampleSch';
+import { toDosApi } from '../../api/toDosApi';
+import { IToDos } from '../../api/toDosSch';
 import { ISchema } from '../../../../typings/ISchema';
 import { IMeteorError } from '../../../../typings/BoilerplateDefaultTypings';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
 
-interface IExampleDetailContollerContext {
+interface IToDosDetailContollerContext {
 	closePage: () => void;
-	document: IExample;
+	document: IToDos;
 	loading: boolean;
-	schema: ISchema<IExample>;
-	onSubmit: (doc: IExample) => void;
+	schema: ISchema<IToDos>;
+	onSubmit: (doc: IToDos) => void;
 	changeToEdit: (id: string) => void;
 }
 
-export const ExampleDetailControllerContext = createContext<IExampleDetailContollerContext>(
-	{} as IExampleDetailContollerContext
+export const ToDosDetailControllerContext = createContext<IToDosDetailContollerContext>(
+	{} as IToDosDetailContollerContext
 );
 
-const ExampleDetailController = () => {
+const ToDosDetailController = () => {
 	const navigate = useNavigate();
-	const { id, state } = useContext(ExampleModuleContext);
+	const { id, state } = useContext(ToDosModuleContext);
 	const { showNotification } = useContext<IAppLayoutContext>(AppLayoutContext);
 
 	const { document, loading } = useTracker(() => {
-		const subHandle = !!id ? exampleApi.subscribe('exampleDetail', { _id: id }) : null;
-		const document = id && subHandle?.ready() ? exampleApi.findOne({ _id: id }) : {};
+		const subHandle = !!id ? toDosApi.subscribe('toDosDetail', { _id: id }) : null;
+		const document = id && subHandle?.ready() ? toDosApi.findOne({ _id: id }) : {};
 		return {
-			document: (document as IExample) ?? ({ _id: id } as IExample),
+			document: (document as IToDos) ?? ({ _id: id } as IToDos),
 			loading: !!subHandle && !subHandle?.ready()
 		};
 	}, [id]);
@@ -40,12 +40,12 @@ const ExampleDetailController = () => {
 		navigate(-1);
 	}, []);
 	const changeToEdit = useCallback((id: string) => {
-		navigate(`/example/edit/${id}`);
+		navigate(`/toDos/edit/${id}`);
 	}, []);
 
-	const onSubmit = useCallback((doc: IExample) => {
+	const onSubmit = useCallback((doc: IToDos) => {
 		const selectedAction = state === 'create' ? 'insert' : 'update';
-		exampleApi[selectedAction](doc, (e: IMeteorError) => {
+		toDosApi[selectedAction](doc, (e: IMeteorError) => {
 			if (!e) {
 				closePage();
 				showNotification({
@@ -64,18 +64,18 @@ const ExampleDetailController = () => {
 	}, []);
 
 	return (
-		<ExampleDetailControllerContext.Provider
+		<ToDosDetailControllerContext.Provider
 			value={{
 				closePage,
 				document: { ...document, _id: id },
 				loading,
-				schema: exampleApi.getSchema(),
+				schema: toDosApi.getSchema(),
 				onSubmit,
 				changeToEdit
 			}}>
-			{<ExampleDetailView />}
-		</ExampleDetailControllerContext.Provider>
+			{<ToDosDetailView />}
+		</ToDosDetailControllerContext.Provider>
 	);
 };
 
-export default ExampleDetailController;
+export default ToDosDetailController;

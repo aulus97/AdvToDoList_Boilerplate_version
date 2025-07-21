@@ -2,41 +2,36 @@ import React, { useContext } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ExampleListControllerContext } from './exampleListController';
+import { SysFab } from '/imports/ui/components/sysFab/sysFab';
+import { AniversarioListControllerContext } from './aniversarioListController';
 import { useNavigate } from 'react-router-dom';
-import { ComplexTable } from '../../../../ui/components/ComplexTable/ComplexTable';
-import DeleteDialog from '../../../../ui/appComponents/showDialog/custom/deleteDialog/deleteDialog';
-import ExampleListStyles from './exampleListStyles';
-import SysTextField from '../../../../ui/components/sysFormFields/sysTextField/sysTextField';
-import { SysSelectField } from '../../../../ui/components/sysFormFields/sysSelectField/sysSelectField';
-import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
-import { SysFab } from '../../../../ui/components/sysFab/sysFab';
+import { ComplexTable } from '/imports/ui/components/ComplexTable/ComplexTable';
+import DeleteDialog from '/imports/ui/appComponents/showDialog/custom/deleteDialog/deleteDialog';
+import AniversarioListStyles from './aniversarioListStyles';
+import SysTextField from '/imports/ui/components/sysFormFields/sysTextField/sysTextField';
+import SysIcon from '/imports/ui/components/sysIcon/sysIcon';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
 
-const ExampleListView = () => {
-	const controller = React.useContext(ExampleListControllerContext);
+
+const AniversarioListView = () => {
+	const controller = useContext(AniversarioListControllerContext);
 	const sysLayoutContext = useContext<IAppLayoutContext>(AppLayoutContext);
 	const navigate = useNavigate();
-	const { Container, LoadingContainer, SearchContainer } = ExampleListStyles;
-
-	const options = [{ value: '', label: 'Nenhum' }, ...(controller.schema.type.options?.() ?? [])];
+  const {
+    Container,
+    LoadingContainer,
+    SearchContainer
+  } = AniversarioListStyles;
 
 	return (
 		<Container>
-			<Typography variant="h5">Lista de Itens</Typography>
+			<Typography variant="h5">Lista de Aniversários</Typography>
 			<SearchContainer>
 				<SysTextField
 					name="search"
 					placeholder="Pesquisar por nome"
 					onChange={controller.onChangeTextField}
 					startAdornment={<SysIcon name={'search'} />}
-				/>
-				<SysSelectField
-					name="Category"
-					label="Categoria"
-					options={options}
-					placeholder="Selecionar"
-					onChange={controller.onChangeCategory}
 				/>
 			</SearchContainer>
 			{controller.loading ? (
@@ -47,17 +42,17 @@ const ExampleListView = () => {
 			) : (
 				<Box sx={{ width: '100%' }}>
 					<ComplexTable
-						data={controller.todoList}
+						data={controller.aniversarioList}
 						schema={controller.schema}
-						onRowClick={(row) => navigate('/example/view/' + row.id)}
-						searchPlaceholder={'Pesquisar exemplo'}
-						onEdit={(row) => navigate('/example/edit/' + row._id)}
+						onRowClick={(row) => navigate('/aniversario/view/' + row.id)}
+						searchPlaceholder={'Pesquisar aniversario'}
+						onEdit={(row) => navigate('/aniversario/edit/' + row._id)}
 						onDelete={(row) => {
 							DeleteDialog({
 								showDialog: sysLayoutContext.showDialog,
 								closeDialog: sysLayoutContext.closeDialog,
 								title: `Excluir dado ${row.title}`,
-								message: `Tem certeza que deseja excluir o arquivo ${row.title}?`,
+								message: `Tem certeza que deseja excluir o item ${row.title}?`,
 								onDeleteConfirm: () => {
 									controller.onDeleteButtonClick(row);
 									sysLayoutContext.showNotification({
@@ -81,4 +76,4 @@ const ExampleListView = () => {
 	);
 };
 
-export default ExampleListView;
+export default AniversarioListView;

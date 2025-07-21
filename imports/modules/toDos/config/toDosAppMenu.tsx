@@ -2,9 +2,9 @@ import React from 'react';
 import { IAppMenu } from '../../../modules/modulesTypings';
 import SysIcon from '../../../ui/components/sysIcon/sysIcon';
 
-export const exampleMenuItemList: (IAppMenu | null)[] = [
+export const toDosMenuItemList: (IAppMenu | null)[] = [
 	{
-		path: '/example',
+		path: '/toDos',
 		name: 'Exemplo',
 		icon: <SysIcon name={'dashboard'} />
 	}

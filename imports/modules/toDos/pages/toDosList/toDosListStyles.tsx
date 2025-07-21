@@ -4,13 +4,13 @@ import Box, { BoxProps } from '@mui/material/Box';
 import { sysSizing } from '../../../../ui/materialui/styles';
 import { SysSectionPaddingXY } from '../../../../ui/layoutComponents/sysLayoutComponents';
 
-interface IExampleListStyles {
+interface IToDosListStyles {
 	Container: ElementType<BoxProps>;
 	LoadingContainer: ElementType<BoxProps>;
 	SearchContainer: ElementType<BoxProps>;
 }
 
-const ExampleListStyles: IExampleListStyles = {
+const ToDosListStyles: IToDosListStyles = {
 	Container: styled(SysSectionPaddingXY)(() => ({
 		display: 'flex',
 		flexDirection: 'column',
@@ -45,4 +45,4 @@ const ExampleListStyles: IExampleListStyles = {
 	}))
 };
 
-export default ExampleListStyles;
+export default ToDosListStyles;

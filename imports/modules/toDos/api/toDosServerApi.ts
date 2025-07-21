@@ -1,14 +1,14 @@
 // region Imports
 import { Recurso } from '../config/recursos';
-import { exampleSch, IExample } from './exampleSch';
+import { toDosSch, IToDos } from './toDosSch';
 import { userprofileServerApi } from '../../../modules/userprofile/api/userProfileServerApi';
 import { ProductServerBase } from '../../../api/productServerBase';
 
 // endregion
 
-class ExampleServerApi extends ProductServerBase<IExample> {
+class ToDosServerApi extends ProductServerBase<IToDos> {
 	constructor() {
-		super('example', exampleSch, {
+		super('toDos', toDosSch, {
 			resources: Recurso
 			// saveImageToDisk: true,
 		});
@@ -16,23 +16,19 @@ class ExampleServerApi extends ProductServerBase<IExample> {
 		const self = this;
 
 		this.addTransformedPublication(
-			'exampleList',
-			(filter = {}, options = {}) => {
+			'toDosList',
+			(filter = {}) => {
 				return this.defaultListCollectionPublication(filter, {
-					...options,
-					projection: { title: 1, type: 1, typeMulti: 1, createdAt: 1, createdBy: 1 }
+					projection: { title: 1, type: 1, typeMulti: 1, createdAt: 1 }
 				});
 			},
-			async (doc: IExample & { nomeUsuario: string }) => {
-				if (!doc.createdBy) {
-					return doc;
-				}
-				const userProfileDoc = await userprofileServerApi.getCollectionInstance().findOneAsync({ _id: doc.createdBy }, {fields: {username: 1}});
-				return { ...doc, nomeUsuario: userProfileDoc?.username };
+			async (doc: IToDos & { nomeUsuario: string }) => {
+				const userProfileDoc = await userprofileServerApi.getCollectionInstance().findOneAsync({ _id: doc.createdBy });
+				return { ...doc };
 			}
 		);
 
-		this.addPublication('exampleDetail', (filter = {}) => {
+		this.addPublication('toDosDetail', (filter = {}) => {
 			return this.defaultDetailCollectionPublication(filter, {
 				projection: {
 					contacts: 1,
@@ -63,14 +59,14 @@ class ExampleServerApi extends ProductServerBase<IExample> {
 	// 	);
 
 	// 	this.addRestEndpoint(
-	// 		'view/:exampleId',
+	// 		'view/:toDosId',
 	// 		(params, _options) => {
 	// 			console.log('Rest', params);
-	// 			if (params.exampleId) {
+	// 			if (params.toDosId) {
 	// 				return self
 	// 					.defaultCollectionPublication(
 	// 						{
-	// 							_id: params.exampleId
+	// 							_id: params.toDosId
 	// 						},
 	// 						{}
 	// 					)
@@ -85,4 +81,4 @@ class ExampleServerApi extends ProductServerBase<IExample> {
 	}
 }
 
-export const exampleServerApi = new ExampleServerApi();
+export const toDosServerApi = new ToDosServerApi();
