@@ -260,7 +260,11 @@ export const ComplexTable = (props: IComplexTableProps) => {
 				return !!value[curr] ? `${prev}\n` + `${curr}: ${value[curr]}\n` : prev + '\n';
 			}, '');
 			return data;
-		} else if (type === Date) return value.toLocaleDateString();
+		} else if (type === Date) {
+			const dateObj = new Date(value);
+			return isNaN(dateObj.getTime()) ? '-' : dateObj.toLocaleDateString();
+		}
+		
 		else return value;
 	};
 	const renderHeader = (params: GridColumnHeaderParams) => (
