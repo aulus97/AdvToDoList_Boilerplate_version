@@ -1,28 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { SysFab } from '/imports/ui/components/sysFab/sysFab';
 import { ExampleListControllerContext } from './exampleListController';
 import { useNavigate } from 'react-router-dom';
-import { ComplexTable } from '/imports/ui/components/ComplexTable/ComplexTable';
-import DeleteDialog from '/imports/ui/appComponents/showDialog/custom/deleteDialog/deleteDialog';
-import { SysAppLayoutContext } from '/imports/app/appLayout';
+import { ComplexTable } from '../../../../ui/components/ComplexTable/ComplexTable';
+import DeleteDialog from '../../../../ui/appComponents/showDialog/custom/deleteDialog/deleteDialog';
 import ExampleListStyles from './exampleListStyles';
-import SysTextField from '/imports/ui/components/sysFormFields/sysTextField/sysTextField';
-import { SysSelectField } from '/imports/ui/components/sysFormFields/sysSelectField/sysSelectField';
-import SysIcon from '/imports/ui/components/sysIcon/sysIcon';
-
+import SysTextField from '../../../../ui/components/sysFormFields/sysTextField/sysTextField';
+import { SysSelectField } from '../../../../ui/components/sysFormFields/sysSelectField/sysSelectField';
+import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
+import { SysFab } from '../../../../ui/components/sysFab/sysFab';
+import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
 
 const ExampleListView = () => {
 	const controller = React.useContext(ExampleListControllerContext);
-	const sysLayoutContext = React.useContext(SysAppLayoutContext);
+	const sysLayoutContext = useContext<IAppLayoutContext>(AppLayoutContext);
 	const navigate = useNavigate();
-  const {
-    Container,
-    LoadingContainer,
-    SearchContainer
-  } = ExampleListStyles;
+	const { Container, LoadingContainer, SearchContainer } = ExampleListStyles;
 
 	const options = [{ value: '', label: 'Nenhum' }, ...(controller.schema.type.options?.() ?? [])];
 

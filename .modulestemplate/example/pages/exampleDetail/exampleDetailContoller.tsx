@@ -5,9 +5,9 @@ import { ExampleModuleContext } from '../../exampleContainer';
 import { useTracker } from 'meteor/react-meteor-data';
 import { exampleApi } from '../../api/exampleApi';
 import { IExample } from '../../api/exampleSch';
-import { ISchema } from '/imports/typings/ISchema';
-import { IMeteorError } from '/imports/typings/BoilerplateDefaultTypings';
-import { SysAppLayoutContext } from '/imports/app/appLayout';
+import { ISchema } from '../../../../typings/ISchema';
+import { IMeteorError } from '../../../../typings/BoilerplateDefaultTypings';
+import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
 
 interface IExampleDetailContollerContext {
 	closePage: () => void;
@@ -25,7 +25,7 @@ export const ExampleDetailControllerContext = createContext<IExampleDetailContol
 const ExampleDetailController = () => {
 	const navigate = useNavigate();
 	const { id, state } = useContext(ExampleModuleContext);
-	const { showNotification } = useContext(SysAppLayoutContext);
+	const { showNotification } = useContext<IAppLayoutContext>(AppLayoutContext);
 
 	const { document, loading } = useTracker(() => {
 		const subHandle = !!id ? exampleApi.subscribe('exampleDetail', { _id: id }) : null;

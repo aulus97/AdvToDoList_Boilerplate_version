@@ -1,8 +1,8 @@
 // region Imports
 import { Recurso } from '../config/recursos';
 import { exampleSch, IExample } from './exampleSch';
-import { userprofileServerApi } from '/imports/modules/userprofile/api/userProfileServerApi';
-import { ProductServerBase } from '/imports/api/productServerBase';
+import { userprofileServerApi } from '../../../modules/userprofile/api/userProfileServerApi';
+import { ProductServerBase } from '../../../api/productServerBase';
 
 // endregion
 
@@ -22,8 +22,8 @@ class ExampleServerApi extends ProductServerBase<IExample> {
 					projection: { title: 1, type: 1, typeMulti: 1, createdat: 1 }
 				});
 			},
-			(doc: IExample & { nomeUsuario: string }) => {
-				const userProfileDoc = userprofileServerApi.getCollectionInstance().findOne({ _id: doc.createdby });
+			async (doc: IExample & { nomeUsuario: string }) => {
+				const userProfileDoc = await userprofileServerApi.getCollectionInstance().findOneAsync({ _id: doc.createdby });
 				return { ...doc };
 			}
 		);
@@ -48,35 +48,36 @@ class ExampleServerApi extends ProductServerBase<IExample> {
 			});
 		});
 
-		this.addRestEndpoint(
-			'view',
-			(params, options) => {
-				console.log('Params', params);
-				console.log('options.headers', options.headers);
-				return { status: 'ok' };
-			},
-			['post']
-		);
+	// 	this.addRestEndpoint(
+	// 		'view',
+	// 		(params, options) => {
+	// 			console.log('Params', params);
+	// 			console.log('options.headers', options.headers);
+	// 			return { status: 'ok' };
+	// 		},
+	// 		['post']
+	// 	);
 
-		this.addRestEndpoint(
-			'view/:exampleId',
-			(params, _options) => {
-				console.log('Rest', params);
-				if (params.exampleId) {
-					return self
-						.defaultCollectionPublication(
-							{
-								_id: params.exampleId
-							},
-							{}
-						)
-						.fetch();
-				} else {
-					return { ...params };
-				}
-			},
-			['get']
-		);
+	// 	this.addRestEndpoint(
+	// 		'view/:exampleId',
+	// 		(params, _options) => {
+	// 			console.log('Rest', params);
+	// 			if (params.exampleId) {
+	// 				return self
+	// 					.defaultCollectionPublication(
+	// 						{
+	// 							_id: params.exampleId
+	// 						},
+	// 						{}
+	// 					)
+	// 					.fetch();
+	// 			} else {
+	// 				return { ...params };
+	// 			}
+	// 		},
+	// 		['get']
+	// 	);
+	// }
 	}
 }
 
