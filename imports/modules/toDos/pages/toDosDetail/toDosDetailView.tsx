@@ -15,6 +15,7 @@ import { SysUploadFile } from '../../../../ui/components/sysFormFields/sysUpload
 import SysSlider from '../../../../ui/components/sysFormFields/sysSlider/sysSliderField';
 import { SysLocationField } from '../../../../ui/components/sysFormFields/sysLocationField/sysLocationField';
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
+import { json } from 'body-parser';
 
 const ToDosDetailView = () => {
 	const controller = useContext(ToDosDetailControllerContext);
@@ -76,6 +77,7 @@ const ToDosDetailView = () => {
 					<SysFormButton>Salvar</SysFormButton>
 				</Footer>
 			</SysForm>
+			{JSON.stringify(controller.document)}
 		</Container>
 	);
 };

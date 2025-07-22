@@ -3,6 +3,7 @@ import { Recurso } from '../config/recursos';
 import { toDosSch, IToDos } from './toDosSch';
 import { userprofileServerApi } from '../../../modules/userprofile/api/userProfileServerApi';
 import { ProductServerBase } from '../../../api/productServerBase';
+import { IUserProfile } from '../../userprofile/api/userProfileSch';
 
 // endregion
 
@@ -17,18 +18,58 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 
 		this.addTransformedPublication(
 			'toDosList',
-			(filter = {}) => {
-				return this.defaultListCollectionPublication(filter, {
-					projection: { title: 1, type: 1, typeMulti: 1, createdAt: 1 },
-				});
+			async (filter = {}) => {
+				return this.find(
+					filter, 
+					{
+						fields: {
+							title: 1,
+							description: 1,
+							type: 1,
+							typeMulti: 1,
+							date: 1,
+							check: 1,
+							image: 1,
+							createdBy: 1,
+						},
+					});
 			},
-			async (doc: IToDos & { nomeUsuario: string }) => {
-				const userProfileDoc = await userprofileServerApi.getCollectionInstance().findOneAsync({ _id: doc.createdBy });
-				return { ...doc };
+			async (doc: Partial<IToDos>) : Promise<Partial<IToDos & { username: string } >> => {
+				const user: IUserProfile = await userprofileServerApi.getCollectionInstance().findOneAsync(
+					{ _id: doc.createdBy },
+					{fields: { username: 1 } },
+			);
+				return{...doc, username: user?.username || 'Usuário Desconhecido' };
 			}
 		);
 
-		this.addPublication('toDosDetail', (filter = {}) => {
+		this.addTransformedPublication(
+			'toDosDetail',
+			async (filter = {}) => {
+				return this.find(
+					filter, 
+					{
+						fields: {
+							title: 1,
+							description: 1,
+							type: 1,
+							typeMulti: 1,
+							date: 1,
+							check: 1,
+							image: 1,
+							createdBy: 1,
+						},
+					});
+			},
+			async (doc: Partial<IToDos> & { username: string }) : Promise<Partial<IToDos  >> => {
+				const user: IUserProfile = await userprofileServerApi.getCollectionInstance().findOneAsync(
+					{ _id: doc.createdBy },
+					{fields: { username: 1 } },
+			);
+				return{...doc, username: user?.username || 'Usuário Desconhecido' };
+			}
+		);
+		/* this.addPublication('toDosDetail', (filter = {}) => {
 			return this.defaultDetailCollectionPublication(filter, {
 				projection: {
 					contacts: 1,
@@ -46,7 +87,7 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 					address: 1
 				}
 			});
-		});
+		}); */
 
 	// 	this.addRestEndpoint(
 	// 		'view',

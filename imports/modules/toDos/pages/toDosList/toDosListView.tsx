@@ -47,10 +47,10 @@ const ToDosListView = () => {
 					<Typography variant="body1">Aguarde, carregando informações...</Typography>
 				</LoadingContainer>
 			) : (
-				<Box sx={{ width: '100%', ml:4 }}>
+				<Box sx={{ width: '100%' }}>
 					{controller.todoList.map((task) => (
 						<List>
-							<ListItem onClick={() => navigate('/toDos/view/' + task._id)} key={task._id} sx={{ cursor: 'pointer', ml:2 }}>
+							<ListItem onClick={() => navigate('/toDos/view/' + task._id)} key={task._id} sx={{ cursor: 'pointer'}}>
 								<FormControlLabel
 									control={
 										<Checkbox
@@ -63,13 +63,18 @@ const ToDosListView = () => {
 								{task.image ? 
 									<IconButton > task.image </IconButton> 
 								: <IconButton> <SysIcon name={'task'} /> </IconButton>}
-								<Typography variant="h4" component="div">
-									{task?.title + " >> " +" " || "Título Desconhecido"}
+								<Typography variant="h6" component="div" noWrap>
+									{task?.title || 'Título Desconhecido'}
 								</Typography>
-								<ListItemText
-									primary={" " + task?.description || "Descrição Desconhecida"}
-									secondary={" by: " + task?.createdBy || "Usuário Desconhecido"}
-								/>
+								<Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, ml: 2 }}>
+
+									<ListItemText
+										primary={task?.description || 'Descrição Desconhecida'}
+										secondary={'by: ' + (task?.username || 'Usuário Desconhecido')}
+										primaryTypographyProps={{ noWrap: false }}
+										secondaryTypographyProps={{ noWrap: false }}
+									/>
+								</Box>
 								<IconButton edge="end" aria-label="delete">
 									<DeleteIcon />
 								</IconButton>
