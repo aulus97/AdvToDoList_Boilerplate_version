@@ -25,8 +25,7 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 						fields: {
 							title: 1,
 							description: 1,
-							type: 1,
-							typeMulti: 1,
+							createdAt: 1,
 							date: 1,
 							check: 1,
 							image: 1,
@@ -52,8 +51,7 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 						fields: {
 							title: 1,
 							description: 1,
-							type: 1,
-							typeMulti: 1,
+							createdAt: 1,
 							date: 1,
 							check: 1,
 							image: 1,

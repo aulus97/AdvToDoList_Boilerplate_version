@@ -38,8 +38,8 @@ const initialConfig = {
 const ToDosListController = () => {
 	const [config, setConfig] = React.useState<IInitialConfig>(initialConfig);
 
-	const { title, type, typeMulti } = toDosApi.getSchema();
-	const toDosSchReduzido = { title, type, typeMulti, createdAt: { type: Date, label: 'Criado em' } };
+	const { title } = toDosApi.getSchema();
+	const toDosSchReduzido = { title, createdAt: { type: Date, label: 'Criado em' } };
 	const navigate = useNavigate();
 
 	const { sortProperties, filter } = config;

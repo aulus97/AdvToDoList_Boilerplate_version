@@ -17,6 +17,11 @@ import { SysLocationField } from '../../../../ui/components/sysFormFields/sysLoc
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { json } from 'body-parser';
 
+enum situationColors {
+    'NC'='#29b6f6',//info color from MUI palette for dark themes
+    'CC'='#66bb6a',//success color from MUI palette for dark themes
+};
+
 const ToDosDetailView = () => {
 	const controller = useContext(ToDosDetailControllerContext);
 	const { state } = useContext(ToDosModuleContext);
@@ -24,7 +29,9 @@ const ToDosDetailView = () => {
 	const isEdit = state === 'edit';
 	const isCreate = state === 'create';
 	const { Container, Body, Header, Footer, FormColumn } = ToDosDetailStyles;
-
+	const statusKey = Array.isArray(controller.document.check)
+	? controller.document.check[0]
+	: controller.document.check;
 	return (
 		<Container>
 			<Header>
@@ -50,8 +57,6 @@ const ToDosDetailView = () => {
 				<Body>
 					<FormColumn>
 						<SysTextField name="title" placeholder="Ex.: Item XX" />
-						<SysSelectField name="type" placeholder="Selecionar" />
-						<SysRadioButton name="typeMulti" childrenAlignment="row" size="small" />
 						<SysTextField
 							name="description"
 							placeholder="Acrescente informações sobre o item (3 linhas)"
@@ -60,13 +65,18 @@ const ToDosDetailView = () => {
 							showNumberCharactersTyped
 							max={200}
 						/>
-						<SysUploadFile name="files" />
-						<SysSlider name="slider" />
-						<SysLocationField name="address" />
 					</FormColumn>
-					<FormColumn>
-						<SysCheckBox name="check" childrenAlignment="row" />
-					</FormColumn>
+					{isEdit ? (
+						<FormColumn>
+							<SysCheckBox name="check" childrenAlignment="row" />
+						</FormColumn> ) 
+					: (isView && (
+						<FormColumn>
+							<Typography variant="body1" sx={{color: situationColors[statusKey as keyof typeof situationColors] ?? 'inherit'}}> 
+								Status: {controller.document.check}
+							</Typography>
+						</FormColumn> ) )
+					}
 				</Body>
 				<Footer>
 					{!isView && (

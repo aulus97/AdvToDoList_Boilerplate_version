@@ -21,7 +21,7 @@ const ToDosListView = () => {
 	const navigate = useNavigate();
 	const { Container, LoadingContainer, SearchContainer } = ToDosListStyles;
 
-	const options = [{ value: '', label: 'Nenhum' }, ...(controller.schema.type.options?.() ?? [])];
+	//const options = [{ value: '', label: 'Nenhum' }, ...(controller.schema.type.options?.() ?? [])];
 
 	return (
 		<Container>
@@ -33,13 +33,13 @@ const ToDosListView = () => {
 					onChange={controller.onChangeTextField}
 					startAdornment={<SysIcon name={'search'} />}
 				/>
-				<SysSelectField
+				{/* <SysSelectField
 					name="Category"
 					label="Categoria"
 					options={options}
 					placeholder="Selecionar"
 					onChange={controller.onChangeCategory}
-				/>
+				/> */}
 			</SearchContainer>
 			{controller.loading ? (
 				<LoadingContainer>
