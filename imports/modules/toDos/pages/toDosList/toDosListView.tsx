@@ -12,6 +12,8 @@ import { SysSelectField } from '../../../../ui/components/sysFormFields/sysSelec
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { SysFab } from '../../../../ui/components/sysFab/sysFab';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
+import { Checkbox, FormControlLabel, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ToDosListView = () => {
 	const controller = React.useContext(ToDosListControllerContext);
@@ -46,7 +48,43 @@ const ToDosListView = () => {
 				</LoadingContainer>
 			) : (
 				<Box sx={{ width: '100%' }}>
-					<ComplexTable
+					<List>
+						<ListItem disablePadding>
+						<FormControlLabel
+							control={
+								<Checkbox
+								//checked={!!task.isChecked}
+								//onChange={() => onCheckboxClick(task)}
+								/>
+							}
+							label=""
+						/>
+						<ListItemText
+							primary={"" + controller.todoList.length + " itens encontrados"}
+							secondary={"by: " + controller.todoList[0]?.createdBy?.username || "Usuário Desconhecido"}
+						/>
+						<IconButton edge="end" aria-label="delete">
+							<DeleteIcon />
+						</IconButton>
+						</ListItem>
+					</List>
+				</Box>
+			)}
+
+			<SysFab
+				variant="extended"
+				text="Adicionar"
+				startIcon={<SysIcon name={'add'} />}
+				fixed={true}
+				onClick={controller.onAddButtonClick}
+			/>
+		</Container>
+	);
+};
+
+export default ToDosListView;
+/* 
+<ComplexTable
 						data={controller.todoList}
 						schema={controller.schema}
 						onRowClick={(row) => navigate('/toDos/view/' + row.id)}
@@ -67,18 +105,4 @@ const ToDosListView = () => {
 							});
 						}}
 					/>
-				</Box>
-			)}
-
-			<SysFab
-				variant="extended"
-				text="Adicionar"
-				startIcon={<SysIcon name={'add'} />}
-				fixed={true}
-				onClick={controller.onAddButtonClick}
-			/>
-		</Container>
-	);
-};
-
-export default ToDosListView;
+*/
