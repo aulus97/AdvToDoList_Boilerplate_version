@@ -12,7 +12,7 @@ import { SysSelectField } from '../../../../ui/components/sysFormFields/sysSelec
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { SysFab } from '../../../../ui/components/sysFab/sysFab';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
-import { Checkbox, FormControlLabel, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import { Checkbox, Divider, FormControlLabel, IconButton, List, ListItem, ListItemText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const ToDosListView = () => {
@@ -47,27 +47,35 @@ const ToDosListView = () => {
 					<Typography variant="body1">Aguarde, carregando informações...</Typography>
 				</LoadingContainer>
 			) : (
-				<Box sx={{ width: '100%' }}>
-					<List>
-						<ListItem disablePadding>
-						<FormControlLabel
-							control={
-								<Checkbox
-								//checked={!!task.isChecked}
-								//onChange={() => onCheckboxClick(task)}
+				<Box sx={{ width: '100%', ml:4 }}>
+					{controller.todoList.map((task) => (
+						<List>
+							<ListItem onClick={() => navigate('/toDos/view/' + task._id)} key={task._id} sx={{ cursor: 'pointer', ml:2 }}>
+								<FormControlLabel
+									control={
+										<Checkbox
+										//checked={!!controller.todoList.check}
+										//onChange={() => onCheckboxClick(task)}
+										/>
+									}
+									label=""
 								/>
-							}
-							label=""
-						/>
-						<ListItemText
-							primary={"" + controller.todoList.length + " itens encontrados"}
-							secondary={"by: " + controller.todoList[0]?.createdBy?.username || "Usuário Desconhecido"}
-						/>
-						<IconButton edge="end" aria-label="delete">
-							<DeleteIcon />
-						</IconButton>
-						</ListItem>
-					</List>
+								{task.image ? 
+									<IconButton > task.image </IconButton> 
+								: <IconButton> <SysIcon name={'task'} /> </IconButton>}
+								<Typography variant="h4" component="div">
+									{task?.title + " >> " +" " || "Título Desconhecido"}
+								</Typography>
+								<ListItemText
+									primary={" " + task?.description || "Descrição Desconhecida"}
+									secondary={" by: " + task?.createdBy || "Usuário Desconhecido"}
+								/>
+								<IconButton edge="end" aria-label="delete">
+									<DeleteIcon />
+								</IconButton>
+							</ListItem>
+						</List>
+					))}
 				</Box>
 			)}
 

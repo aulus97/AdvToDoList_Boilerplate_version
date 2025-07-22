@@ -19,7 +19,7 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 			'toDosList',
 			(filter = {}) => {
 				return this.defaultListCollectionPublication(filter, {
-					projection: { title: 1, type: 1, typeMulti: 1, createdAt: 1 }
+					projection: { title: 1, type: 1, typeMulti: 1, createdAt: 1 },
 				});
 			},
 			async (doc: IToDos & { nomeUsuario: string }) => {
