@@ -18,8 +18,8 @@ import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { json } from 'body-parser';
 
 enum situationColors {
-    'NC'='#29b6f6',//info color from MUI palette for dark themes
-    'CC'='#66bb6a',//success color from MUI palette for dark themes
+    NC='#29b6f6',//info color from MUI palette for dark themes
+    CC='#66bb6a',//success color from MUI palette for dark themes
 };
 
 const ToDosDetailView = () => {
@@ -29,9 +29,9 @@ const ToDosDetailView = () => {
 	const isEdit = state === 'edit';
 	const isCreate = state === 'create';
 	const { Container, Body, Header, Footer, FormColumn } = ToDosDetailStyles;
-	const statusKey = Array.isArray(controller.document.check)
+	/*const statusKey = Array.isArray(controller.document.check)
 	? controller.document.check[0]
-	: controller.document.check;
+	: controller.document.check;*/
 	return (
 		<Container>
 			<Header>
@@ -72,7 +72,7 @@ const ToDosDetailView = () => {
 						</FormColumn> ) 
 					: (isView && (
 						<FormColumn>
-							<Typography variant="body1" sx={{color: situationColors[statusKey as keyof typeof situationColors] ?? 'inherit'}}> 
+							<Typography variant="body1" sx={{/* color: controller.document.check[0] ?? 'inherit' */}}> 
 								Status: {controller.document.check}
 							</Typography>
 						</FormColumn> ) )

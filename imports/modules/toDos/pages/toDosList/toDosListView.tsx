@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -12,8 +12,14 @@ import { SysSelectField } from '../../../../ui/components/sysFormFields/sysSelec
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { SysFab } from '../../../../ui/components/sysFab/sysFab';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
-import { Checkbox, Divider, FormControlLabel, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import { Checkbox, Divider, FormControlLabel, IconButton, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { set } from 'lodash';
+
+enum situationColors {
+    NC='#29b6f6',//info color from MUI palette for dark themes
+    CC='#66bb6a',//success color from MUI palette for dark themes
+};
 
 const ToDosListView = () => {
 	const controller = React.useContext(ToDosListControllerContext);
@@ -50,7 +56,7 @@ const ToDosListView = () => {
 				<Box sx={{ width: '100%' }}>
 					{controller.todoList.map((task) => (
 						<List>
-							<ListItem onClick={() => navigate('/toDos/view/' + task._id)} key={task._id} 
+							<ListItem onClick={() => navigate('/toDos/view/' + task._id)}  key={task._id} 
 							sx={{
 								cursor: 'pointer',
 								display: 'flex',
@@ -69,8 +75,8 @@ const ToDosListView = () => {
 									label=""
 								/>
 								{task.image ? 
-									<IconButton > task.image </IconButton> 
-								: <IconButton> <SysIcon name={'task'} /> </IconButton>}
+									(<IconButton > task.image </IconButton>) 
+								: (<IconButton> <SysIcon name={'task'} /> </IconButton>) }
 								<Typography variant="h6" component="div" noWrap 
 									sx={{
 										width: { xs: '100%', sm: '20%' },
@@ -87,13 +93,32 @@ const ToDosListView = () => {
 										secondaryTypographyProps={{ noWrap: false }}
 									/>
 								</Box>
+								<ListItemButton alignItems='center'  
+									sx={{backgroundColor:'transparent',
+										/* color: situationColors[task.check] ?? 'inherit' */}}
+								>{task.check}</ListItemButton>
 								<IconButton edge="end" aria-label="delete"
 									sx={{
 										alignSelf: { xs: 'flex-end', sm: 'center' },
 										mt: { xs: 1, sm: 0 },
 									}}
 								>
-									<DeleteIcon />
+									<DeleteIcon onClick={(e)=> {
+										e.stopPropagation(); // prevents the ListItem onClick from firing
+										DeleteDialog({
+											showDialog: sysLayoutContext.showDialog,
+											closeDialog: sysLayoutContext.closeDialog,
+											title: `Excluir dado ${task.title}`,
+											message: `Tem certeza que deseja excluir o arquivo ${task.title}?`,
+											onDeleteConfirm: () => {
+												controller.onDeleteButtonClick(task);
+												sysLayoutContext.showNotification({
+													message: 'Excluído com sucesso!'
+												});
+											}
+										});
+										}
+									}/>
 								</IconButton>
 							</ListItem>
 						</List>
