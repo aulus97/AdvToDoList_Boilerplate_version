@@ -97,15 +97,20 @@ const ToDosListView = () => {
 									sx={{backgroundColor:'transparent',
 										/* color: situationColors[task.check] ?? 'inherit' */}}
 								>{task.check}</ListItemButton>
-								<IconButton edge="end" aria-label="delete"
+								<Box onClick={(e) => e.stopPropagation()} 
 									sx={{
+										display: 'flex',
 										alignSelf: { xs: 'flex-end', sm: 'center' },
 										mt: { xs: 1, sm: 0 },
+										gap: 1,
 									}}
 								>
-									<DeleteIcon onClick={(e)=> {
-										e.stopPropagation(); // prevents the ListItem onClick from firing
-										DeleteDialog({
+									<IconButton edge="end" aria-label="edit" >
+										<SysIcon name={'edit'} onClick={(e) => navigate('/toDos/edit/' + task._id)}/>
+									</IconButton>
+
+									<IconButton edge="end" aria-label="delete" >
+										<DeleteIcon onClick={(e)=> DeleteDialog({
 											showDialog: sysLayoutContext.showDialog,
 											closeDialog: sysLayoutContext.closeDialog,
 											title: `Excluir dado ${task.title}`,
@@ -116,10 +121,9 @@ const ToDosListView = () => {
 													message: 'Excluído com sucesso!'
 												});
 											}
-										});
-										}
-									}/>
-								</IconButton>
+										})}/>
+									</IconButton>
+								</Box>
 							</ListItem>
 						</List>
 					))}
