@@ -43,8 +43,7 @@
         "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/shell-server/0.6.1/web.browser/shell-server.js"
       ],
       "meteor/react-meteor-data": [
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/react-meteor-data/3.0.2/web.browser/index.js",
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/react-meteor-data/3.0.2/web.browser/suspense/index.js"
+        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/react-meteor-data/3.0.6/web.browser/suspense/index.js"
       ],
       "meteor/accounts-password": [
         "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/accounts-password/3.2.0/web.browser/password_client.js",
@@ -85,14 +84,14 @@
         "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/ostrio_meteor-root/1.1.1/web.browser/meteor-root.js"
       ],
       "meteor/reywood:publish-composite": [
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.8.12/web.browser/lib/publish_composite.js",
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.8.12/web.browser/lib/doc_ref_counter.js",
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.8.12/web.browser/lib/logging.js",
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.8.12/web.browser/lib/publication.js",
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.8.12/web.browser/lib/subscription.js",
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.8.12/web.browser/lib/published_document.js",
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.8.12/web.browser/lib/published_document_list.js",
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.8.12/web.browser/lib/utils.js"
+        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.9.0/web.browser/lib/publish_composite.js",
+        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.9.0/web.browser/lib/doc_ref_counter.js",
+        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.9.0/web.browser/lib/logging.js",
+        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.9.0/web.browser/lib/publication.js",
+        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.9.0/web.browser/lib/subscription.js",
+        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.9.0/web.browser/lib/published_document.js",
+        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.9.0/web.browser/lib/published_document_list.js",
+        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/reywood_publish-composite/1.9.0/web.browser/lib/utils.js"
       ],
       "meteor/accounts-base": [
         "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/accounts-base/3.1.1/web.browser/client_main.js",
@@ -102,7 +101,7 @@
         "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/accounts-base/3.1.1/web.browser/server_main.js"
       ],
       "meteor/jquery": [
-        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/jquery/3.0.1/web.browser/main.js"
+        "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/jquery/3.0.2/web.browser/main.js"
       ],
       "meteor/http": [
         "C:\\Users\\aulus\\AppData\\Local/.meteor/packages/http/1.4.4/web.browser/httpcall_client.js",

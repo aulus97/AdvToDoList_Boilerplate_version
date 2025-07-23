@@ -29,7 +29,7 @@ export const toDosSch: ISchema<IToDos> = {
 	check: {
 		type: String,
 		label: 'Situação',
-		defaultValue: {},
+		defaultValue: {value: 'NC', label: 'Não Concluída'},
 		optional: true,
 		options: () => [
 			{ value: 'NC', label: 'Não Concluída' },

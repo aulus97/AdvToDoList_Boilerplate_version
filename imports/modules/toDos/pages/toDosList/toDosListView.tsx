@@ -50,7 +50,15 @@ const ToDosListView = () => {
 				<Box sx={{ width: '100%' }}>
 					{controller.todoList.map((task) => (
 						<List>
-							<ListItem onClick={() => navigate('/toDos/view/' + task._id)} key={task._id} sx={{ cursor: 'pointer'}}>
+							<ListItem onClick={() => navigate('/toDos/view/' + task._id)} key={task._id} 
+							sx={{
+								cursor: 'pointer',
+								display: 'flex',
+								flexDirection: { xs: 'column', sm: 'row' }, // Stack vertically on mobile
+								alignItems: { xs: 'flex-start', sm: 'center' },
+								gap: 2,
+								width: '100%',
+							}}>
 								<FormControlLabel
 									control={
 										<Checkbox
@@ -63,11 +71,15 @@ const ToDosListView = () => {
 								{task.image ? 
 									<IconButton > task.image </IconButton> 
 								: <IconButton> <SysIcon name={'task'} /> </IconButton>}
-								<Typography variant="h6" component="div" noWrap>
+								<Typography variant="h6" component="div" noWrap 
+									sx={{
+										width: { xs: '100%', sm: '20%' },
+										flexShrink: 0,
+									}}
+								>
 									{task?.title || 'Título Desconhecido'}
 								</Typography>
-								<Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, ml: 2 }}>
-
+								<Box sx={{width: { xs: '100%', sm: '60%' },overflowWrap: 'break-word',wordBreak: 'break-word',}}>
 									<ListItemText
 										primary={task?.description || 'Descrição Desconhecida'}
 										secondary={'by: ' + (task?.username || 'Usuário Desconhecido')}
@@ -75,7 +87,12 @@ const ToDosListView = () => {
 										secondaryTypographyProps={{ noWrap: false }}
 									/>
 								</Box>
-								<IconButton edge="end" aria-label="delete">
+								<IconButton edge="end" aria-label="delete"
+									sx={{
+										alignSelf: { xs: 'flex-end', sm: 'center' },
+										mt: { xs: 1, sm: 0 },
+									}}
+								>
 									<DeleteIcon />
 								</IconButton>
 							</ListItem>
