@@ -15,7 +15,7 @@ const menuItens: Array<IAppMenu | null> = [
 	...Example.pagesMenuItemList, 
 	...Aniversario.pagesMenuItemList,
 	...UserProfile.pagesMenuItemList,
-	...ToDos.pagesRouterList
+	...ToDos.pagesMenuItemList
 ];
 
 const Modules: IModuleHub = {
