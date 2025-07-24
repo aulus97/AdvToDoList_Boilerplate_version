@@ -41,7 +41,7 @@ export const toDosSch: ISchema<IToDos> = {
 		label: 'Data de fabricação',
 		defaultValue: '',
 		optional: true
-	},
+	}
 	
 };
 

@@ -38,8 +38,8 @@ const initialConfig = {
 const ToDosListController = () => {
 	const [config, setConfig] = React.useState<IInitialConfig>(initialConfig);
 
-	const { title } = toDosApi.getSchema();
-	const toDosSchReduzido = { title, createdAt: { type: Date, label: 'Criado em' } };
+	const { title, description, createdAt, check } = toDosApi.getSchema();
+	const toDosSchReduzido = { title, description, createdAt: { type: Date, label: 'Criado em' }, check: { type: String, label: 'Situação' } };
 	const navigate = useNavigate();
 
 	const { sortProperties, filter } = config;
@@ -47,16 +47,16 @@ const ToDosListController = () => {
 		[sortProperties.field]: sortProperties.sortAscending ? 1 : -1
 	};
 
-	const { loading, toDoss } = useTracker(() => {
+	const { loading, toDosTasks } = useTracker(() => {
 		const subHandle = toDosApi.subscribe('toDosList', filter, {
 			sort
 		});
 
-		const toDoss = subHandle?.ready() ? toDosApi.find(filter, { sort }).fetch() : [];
+		const toDosTasks = subHandle?.ready() ? toDosApi.find(filter, { sort }).fetch() : [];
 		return {
-			toDoss,
+			toDosTasks,
 			loading: !!subHandle && !subHandle.ready(),
-			total: subHandle ? subHandle.total : toDoss.length
+			total: subHandle ? subHandle.total : toDosTasks.length
 		};
 	}, [config]);
 
@@ -99,13 +99,13 @@ const ToDosListController = () => {
 		() => ({
 			onAddButtonClick,
 			onDeleteButtonClick,
-			todoList: toDoss,
+			todoList: toDosTasks,
 			schema: toDosSchReduzido,
 			loading,
 			onChangeTextField,
 			onChangeCategory: onSelectedCategory
 		}),
-		[toDoss, loading]
+		[toDosTasks, loading, onAddButtonClick, onDeleteButtonClick, onChangeTextField, onSelectedCategory ] //boa prática do ESLint-disable-line react-hooks/exhaustive-deps
 	);
 
 	return (

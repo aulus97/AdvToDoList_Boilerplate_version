@@ -3,6 +3,7 @@ import { Recurso } from '../config/recursos';
 import { welcomeSch, IWelcome } from './welcomeSch';
 import { userprofileServerApi } from '../../../modules/userprofile/api/userProfileServerApi';
 import { ProductServerBase } from '../../../api/productServerBase';
+import { IUserProfile } from '../../userprofile/api/userProfileSch';
 
 // endregion
 
@@ -17,36 +18,55 @@ class WelcomeServerApi extends ProductServerBase<IWelcome> {
 
 		this.addTransformedPublication(
 			'welcomeList',
-			(filter = {}) => {
-				return this.defaultListCollectionPublication(filter, {
-					projection: { title: 1, type: 1, typeMulti: 1, createdAt: 1 }
+			async (filter = {}, options = {}) => {
+				return this.find(filter, {
+					...options,
+					fields: {
+						title: 1,
+						description: 1,
+						createdAt: 1,
+						date: 1,
+						check: 1,
+						image: 1,
+						createdBy: 1,
+					},
 				});
 			},
-			async (doc: IWelcome & { nomeUsuario: string }) => {
-				const userProfileDoc = await userprofileServerApi.getCollectionInstance().findOneAsync({ _id: doc.createdBy });
-				return { ...doc };
+			async (doc: Partial<IWelcome>) : Promise<Partial<IWelcome & { username: string } >> => {
+				const user: IUserProfile = await userprofileServerApi.getCollectionInstance().findOneAsync(
+						{ _id: doc.createdBy },
+						{fields: { username: 1 } },
+			);
+				return{...doc, username: user?.username || 'Usuário Desconhecido' };
 			}
 		);
 
-		this.addPublication('welcomeDetail', (filter = {}) => {
-			return this.defaultDetailCollectionPublication(filter, {
-				projection: {
-					contacts: 1,
-					title: 1,
-					description: 1,
-					type: 1,
-					typeMulti: 1,
-					date: 1,
-					files: 1,
-					chip: 1,
-					statusRadio: 1,
-					statusToggle: 1,
-					slider: 1,
-					check: 1,
-					address: 1
-				}
-			});
-		});
+		this.addTransformedPublication(
+			'welcomeDetail', 
+			async (filter = {}) => {
+				return this.find(
+					filter, 
+					{
+						fields: {
+							title: 1,
+							description: 1,
+							createdAt: 1,
+							date: 1,
+							check: 1,
+							image: 1,
+							createdBy: 1,
+						},
+					});
+			},
+			async (doc: Partial<IWelcome> & { username: string }) : Promise<Partial<IWelcome  >> => {
+				const user: IUserProfile = await userprofileServerApi.getCollectionInstance().findOneAsync(
+					{ _id: doc.createdBy },
+					{fields: { username: 1 } },
+			);
+				return{...doc, username: user?.username || 'Usuário Desconhecido' };
+			}
+		);
+
 
 	// 	this.addRestEndpoint(
 	// 		'view',

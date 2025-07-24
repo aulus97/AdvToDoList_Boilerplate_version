@@ -16,12 +16,16 @@ import SysSlider from '../../../../ui/components/sysFormFields/sysSlider/sysSlid
 import { SysLocationField } from '../../../../ui/components/sysFormFields/sysLocationField/sysLocationField';
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 
+enum situationColors {
+    NC='#29b6f6',//info color from MUI palette for dark themes
+    CC='#66bb6a',//success color from MUI palette for dark themes
+};
+
 const WelcomeDetailView = () => {
 	const controller = useContext(WelcomeDetailControllerContext);
 	const { state } = useContext(WelcomeModuleContext);
 	const isView = state === 'view';
 	const isEdit = state === 'edit';
-	const isCreate = state === 'create';
 	const { Container, Body, Header, Footer, FormColumn } = WelcomeDetailStyles;
 
 	return (
@@ -33,7 +37,7 @@ const WelcomeDetailView = () => {
 					</IconButton>
 				)}
 				<Typography variant="h5" sx={{ flexGrow: 1 }}>
-					{isCreate ? 'Adicionar Item' : isEdit ? 'Editar Item' : controller.document.title}
+					{isEdit ? 'Editar Item' : controller.document.title}
 				</Typography>
 				<IconButton
 					onClick={!isView ? controller.closePage : () => controller.changeToEdit(controller.document._id || '')}>
@@ -41,16 +45,14 @@ const WelcomeDetailView = () => {
 				</IconButton>
 			</Header>
 			<SysForm
-				mode={state as 'create' | 'view' | 'edit'}
+				mode={state as 'view' | 'edit'}
 				schema={controller.schema}
 				doc={controller.document}
 				onSubmit={controller.onSubmit}
 				loading={controller.loading}>
 				<Body>
-					<FormColumn>
+				<FormColumn>
 						<SysTextField name="title" placeholder="Ex.: Item XX" />
-						<SysSelectField name="type" placeholder="Selecionar" />
-						<SysRadioButton name="typeMulti" childrenAlignment="row" size="small" />
 						<SysTextField
 							name="description"
 							placeholder="Acrescente informações sobre o item (3 linhas)"
@@ -59,13 +61,18 @@ const WelcomeDetailView = () => {
 							showNumberCharactersTyped
 							max={200}
 						/>
-						<SysUploadFile name="files" />
-						<SysSlider name="slider" />
-						<SysLocationField name="address" />
 					</FormColumn>
-					<FormColumn>
-						<SysCheckBox name="check" childrenAlignment="row" />
-					</FormColumn>
+					{isEdit ? (
+						<FormColumn>
+							<SysCheckBox name="check" childrenAlignment="row" />
+						</FormColumn> ) 
+					: (isView && (
+						<FormColumn>
+							<Typography variant="body1" sx={{/* color: controller.document.check[0] ?? 'inherit' */}}> 
+								Status: {controller.document.check}
+							</Typography>
+						</FormColumn> ) )
+					}
 				</Body>
 				<Footer>
 					{!isView && (

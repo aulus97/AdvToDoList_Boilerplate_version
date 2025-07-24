@@ -19,7 +19,7 @@ const WelcomeListView = () => {
 	const navigate = useNavigate();
 	const { Container, LoadingContainer, SearchContainer } = WelcomeListStyles;
 
-	const options = [{ value: '', label: 'Nenhum' }, ...(controller.schema.type.options?.() ?? [])];
+	//const options = [{ value: '', label: 'Nenhum' }, ...(controller.schema.type.options?.() ?? [])];
 
 	return (
 		<Container>
@@ -31,7 +31,7 @@ const WelcomeListView = () => {
 					onClick={()=>navigate('/toDos')}
 				/>
 			</SearchContainer>
-			<SearchContainer>
+			{/* <SearchContainer>
 				<SysTextField
 					name="search"
 					placeholder="Pesquisar por nome"
@@ -44,7 +44,7 @@ const WelcomeListView = () => {
 					placeholder="Selecionar"
 					onChange={controller.onChangeCategory}
 				/>
-			</SearchContainer>
+			</SearchContainer> */}
 			{controller.loading ? (
 				<LoadingContainer>
 					<CircularProgress />
@@ -55,7 +55,7 @@ const WelcomeListView = () => {
 					<ComplexTable
 						data={controller.welcomeList}
 						schema={controller.schema}
-						onRowClick={(row) => navigate('/example/view/' + row.id)}
+						onRowClick={(row) => navigate('/todos/view/' + row.id)}
 						searchPlaceholder={'Pesquisar exemplo'}
 					/>
 				</Box>

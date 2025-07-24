@@ -6,22 +6,27 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { ISchema } from '../../../../typings/ISchema';
 import { IWelcome } from '../../api/welcomeSch';
 import { welcomeApi } from '../../api/welcomeApi';
+import { IToDos } from '/imports/modules/toDos/api/toDosSch';
+import { toDosApi } from '/imports/modules/toDos/api/toDosApi';
+
+import { Description } from '@mui/icons-material';
 
 interface IInitialConfig {
 	sortProperties: { field: string; sortAscending: boolean };
 	filter: Object;
 	searchBy: string | null;
 	viewComplexTable: boolean;
+	limit: number;
 }
 
 interface IWelcomeListContollerContext {
-	onAddButtonClick: () => void;
-	onDeleteButtonClick: (row: any) => void;
-	welcomeList: IWelcome[];
+	//onAddButtonClick: () => void;
+	//onDeleteButtonClick: (row: any) => void;
+	welcomeList: IToDos[];
 	schema: ISchema<any>;
 	loading: boolean;
-	onChangeTextField: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	onChangeCategory: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	//onChangeTextField: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	//onChangeCategory: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const WelcomeListControllerContext = React.createContext<IWelcomeListContollerContext>(
@@ -29,30 +34,32 @@ export const WelcomeListControllerContext = React.createContext<IWelcomeListCont
 );
 
 const initialConfig = {
-	sortProperties: { field: 'createdAt', sortAscending: true },
+	sortProperties: { field: 'createdAt', sortAscending: false },
 	filter: {},
 	searchBy: null,
-	viewComplexTable: false
+	viewComplexTable: false,
+	limit: 5
 };
 
 const WelcomeListController = () => {
 	const [config, setConfig] = React.useState<IInitialConfig>(initialConfig);
 
-	const { title, type, typeMulti } = welcomeApi.getSchema();
-	const welcomeSchReduzido = { title, type, typeMulti, createdAt: { type: Date, label: 'Criado em' } };
+	const { title, description, createdAt, check } = toDosApi.getSchema();
+	const welcomeSchReduzido = { title, description, createdAt: { type: Date, label: 'Criado em' }, check: { type: String, label: 'Situação' } };
 	const navigate = useNavigate();
 
-	const { sortProperties, filter } = config;
+	const { sortProperties, filter, limit } = config;
 	const sort = {
 		[sortProperties.field]: sortProperties.sortAscending ? 1 : -1
 	};
 
 	const { loading, welcomeTasks } = useTracker(() => {
-		const subHandle = welcomeApi.subscribe('welcomeList', filter, {
-			sort
+		const subHandle = toDosApi.subscribe('welcomeList', filter, {
+			sort,
+			limit
 		});
 
-		const welcomeTasks = subHandle?.ready() ? welcomeApi.find(filter, { sort }).fetch() : [];
+		const welcomeTasks = subHandle?.ready() ? toDosApi.find(filter, { sort, limit }).fetch() : [];
 		return {
 			welcomeTasks,
 			loading: !!subHandle && !subHandle.ready(),
@@ -60,11 +67,11 @@ const WelcomeListController = () => {
 		};
 	}, [config]);
 
-	const onAddButtonClick = useCallback(() => {
+	/* const onAddButtonClick = useCallback(() => {
 		const newDocumentId = nanoid();
 		navigate(`/welcome/create/${newDocumentId}`);
 	}, []);
-
+	
 	const onDeleteButtonClick = useCallback((row: any) => {
 		welcomeApi.remove(row);
 	}, []);
@@ -94,18 +101,23 @@ const WelcomeListController = () => {
 		}
 		setConfig((prev) => ({ ...prev, filter: { ...prev.filter, type: value } }));
 	}, []);
-
+	*/
+	const onMyTasksButtonClick = useCallback(() => {
+			navigate('/toDos');
+	}, []);//Acrescentar navigate aqui nas dependências se necessário (instabilidade de renderização, por exemplo)
+	
 	const providerValues: IWelcomeListContollerContext = useMemo(
 		() => ({
-			onAddButtonClick,
-			onDeleteButtonClick,
+			//onAddButtonClick,
+			//onDeleteButtonClick,
+			onMyTasksButtonClick,
 			welcomeList: welcomeTasks,
 			schema: welcomeSchReduzido,
 			loading,
-			onChangeTextField,
-			onChangeCategory: onSelectedCategory
+			//onChangeTextField,
+			//onChangeCategory: onSelectedCategory
 		}),
-		[welcomeTasks, loading]
+		[welcomeTasks, loading, onMyTasksButtonClick]
 	);
 
 	return (

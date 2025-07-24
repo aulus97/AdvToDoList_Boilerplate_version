@@ -4,6 +4,7 @@ import { toDosSch, IToDos } from './toDosSch';
 import { userprofileServerApi } from '../../../modules/userprofile/api/userProfileServerApi';
 import { ProductServerBase } from '../../../api/productServerBase';
 import { IUserProfile } from '../../userprofile/api/userProfileSch';
+import _ from 'lodash';
 
 // endregion
 
@@ -67,6 +68,32 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 				return{...doc, username: user?.username || 'Usuário Desconhecido' };
 			}
 		);
+
+		this.addTransformedPublication(
+					'welcomeList',
+					async (filter = {}, options = {}) => {
+						return this.find(filter, {
+							...options,
+							fields: {
+								_id: 1,
+								title: 1,
+								description: 1,
+								createdAt: 1,
+								date: 1,
+								check: 1,
+								image: 1,
+								createdBy: 1,
+							},
+						});
+					},
+					async (doc: Partial<IToDos>) : Promise<Partial<IToDos & { username: string } >> => {
+						const user: IUserProfile = await userprofileServerApi.getCollectionInstance().findOneAsync(
+								{ _id: doc.createdBy },
+								{fields: { username: 1 } },
+					);
+						return{...doc, username: user?.username || 'Usuário Desconhecido' };
+					}
+				);
 		/* this.addPublication('toDosDetail', (filter = {}) => {
 			return this.defaultDetailCollectionPublication(filter, {
 				projection: {
