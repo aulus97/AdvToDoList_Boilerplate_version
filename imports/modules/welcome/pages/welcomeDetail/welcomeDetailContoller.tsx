@@ -5,8 +5,8 @@ import { WelcomeModuleContext } from '../../welcomeContainer';
 import { useTracker } from 'meteor/react-meteor-data';
 import { welcomeApi } from '../../api/welcomeApi';
 import { IWelcome } from '../../api/welcomeSch';
-import { ISchema } from '/imports/typings/ISchema';
-import { IMeteorError } from '/imports/typings/BoilerplateDefaultTypings';
+import { ISchema } from '../../../../typings/ISchema';
+import { IMeteorError } from '../../../../typings/BoilerplateDefaultTypings';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
 
 interface IWelcomeDetailContollerContext {
@@ -36,23 +36,30 @@ const WelcomeDetailController = () => {
 		};
 	}, [id]);
 
-	const closePage = useCallback(() => navigate(-1), []);
-	const changeToEdit = useCallback((id: string) => navigate(`/welcome/edit/${id}`),[]);
+	const closePage = useCallback(() => {
+		navigate(-1);
+	}, []);
+	const changeToEdit = useCallback((id: string) => {
+		navigate(`/welcome/edit/${id}`);
+	}, []);
 
 	const onSubmit = useCallback((doc: IWelcome) => {
 		const selectedAction = state === 'create' ? 'insert' : 'update';
 		welcomeApi[selectedAction](doc, (e: IMeteorError) => {
-      if(e) return showNotification({
-        type: 'error',
-        title: 'Operação não realizada!',
-        message: `Erro ao realizar a operação: ${e.reason}`
-      });
-      closePage();
-      showNotification({
-        type: 'success',
-        title: 'Operação realizada!',
-        message: `O exemplo foi ${selectedAction === 'update' ? 'atualizado' : 'cadastrado'} com sucesso!`
-      });
+			if (!e) {
+				closePage();
+				showNotification({
+					type: 'success',
+					title: 'Operação realizada!',
+					message: `O exemplo foi ${selectedAction === 'update' ? 'atualizado' : 'cadastrado'} com sucesso!`
+				});
+			} else {
+				showNotification({
+					type: 'error',
+					title: 'Operação não realizada!',
+					message: `Erro ao realizar a operação: ${e.reason}`
+				});
+			}
 		});
 	}, []);
 

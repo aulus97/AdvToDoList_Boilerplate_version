@@ -2,16 +2,19 @@ import React, { useContext } from 'react';
 import { WelcomeDetailControllerContext } from './welcomeDetailContoller';
 import { WelcomeModuleContext } from '../../welcomeContainer';
 import WelcomeDetailStyles from './welcomeDetailStyles';
-import SysForm from '/imports/ui/components/sysForm/sysForm';
-import SysTextField from '/imports/ui/components/sysFormFields/sysTextField/sysTextField';
+import SysForm from '../../../../ui/components/sysForm/sysForm';
+import SysTextField from '../../../../ui/components/sysFormFields/sysTextField/sysTextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import { SysSelectField } from '/imports/ui/components/sysFormFields/sysSelectField/sysSelectField';
-import { SysCheckBox } from '/imports/ui/components/sysFormFields/sysCheckBoxField/sysCheckBoxField';
-import SysFormButton from '/imports/ui/components/sysFormFields/sysFormButton/sysFormButton';
-import SysIcon from '/imports/ui/components/sysIcon/sysIcon';
-import {SysDatePickerField} from "/imports/ui/components/sysFormFields/sysDatePickerField/sysDatePickerField";
+import { SysSelectField } from '../../../../ui/components/sysFormFields/sysSelectField/sysSelectField';
+import { SysRadioButton } from '../../../../ui/components/sysFormFields/sysRadioButton/sysRadioButton';
+import { SysCheckBox } from '../../../../ui/components/sysFormFields/sysCheckBoxField/sysCheckBoxField';
+import SysFormButton from '../../../../ui/components/sysFormFields/sysFormButton/sysFormButton';
+import { SysUploadFile } from '../../../../ui/components/sysFormFields/sysUploadFile/sysUploadFile';
+import SysSlider from '../../../../ui/components/sysFormFields/sysSlider/sysSliderField';
+import { SysLocationField } from '../../../../ui/components/sysFormFields/sysLocationField/sysLocationField';
+import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 
 const WelcomeDetailView = () => {
 	const controller = useContext(WelcomeDetailControllerContext);
@@ -19,14 +22,7 @@ const WelcomeDetailView = () => {
 	const isView = state === 'view';
 	const isEdit = state === 'edit';
 	const isCreate = state === 'create';
-  const {
-    Container,
-    Body,
-    Header,
-    Footer,
-    FormColumn,
-    Image
-  } = WelcomeDetailStyles;
+	const { Container, Body, Header, Footer, FormColumn } = WelcomeDetailStyles;
 
 	return (
 		<Container>
@@ -37,7 +33,7 @@ const WelcomeDetailView = () => {
 					</IconButton>
 				)}
 				<Typography variant="h5" sx={{ flexGrow: 1 }}>
-					{isCreate ? 'Adicionar aniversário' : isEdit ? 'Editar aniversário' : 'Detalhes do aniversário'}
+					{isCreate ? 'Adicionar Item' : isEdit ? 'Editar Item' : controller.document.title}
 				</Typography>
 				<IconButton
 					onClick={!isView ? controller.closePage : () => controller.changeToEdit(controller.document._id || '')}>
@@ -45,22 +41,31 @@ const WelcomeDetailView = () => {
 				</IconButton>
 			</Header>
 			<SysForm
-				mode={state}
+				mode={state as 'create' | 'view' | 'edit'}
 				schema={controller.schema}
 				doc={controller.document}
 				onSubmit={controller.onSubmit}
 				loading={controller.loading}>
 				<Body>
 					<FormColumn>
-						<SysTextField name={'name'} placeholder={'Ex.: Davi Esteves'} />
-            <SysDatePickerField name={'birthday'} />
-            <SysTextField name={'phone'} placeholder={'Ex.: (31) 99999-9999'} />
-            <SysCheckBox name={'remember'} />
-            <SysSelectField name={'delivery'} placeholder={'Selecionar'}/>
+						<SysTextField name="title" placeholder="Ex.: Item XX" />
+						<SysSelectField name="type" placeholder="Selecionar" />
+						<SysRadioButton name="typeMulti" childrenAlignment="row" size="small" />
+						<SysTextField
+							name="description"
+							placeholder="Acrescente informações sobre o item (3 linhas)"
+							multiline
+							rows={3}
+							showNumberCharactersTyped
+							max={200}
+						/>
+						<SysUploadFile name="files" />
+						<SysSlider name="slider" />
+						<SysLocationField name="address" />
 					</FormColumn>
-          <FormColumn>
-            <Image src={'/images/img-motivacional.svg'} />
-          </FormColumn>
+					<FormColumn>
+						<SysCheckBox name="check" childrenAlignment="row" />
+					</FormColumn>
 				</Body>
 				<Footer>
 					{!isView && (

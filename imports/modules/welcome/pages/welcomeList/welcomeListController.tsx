@@ -3,7 +3,7 @@ import WelcomeListView from './welcomeListView';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
 import { useTracker } from 'meteor/react-meteor-data';
-import { ISchema } from '/imports/typings/ISchema';
+import { ISchema } from '../../../../typings/ISchema';
 import { IWelcome } from '../../api/welcomeSch';
 import { welcomeApi } from '../../api/welcomeApi';
 
@@ -38,8 +38,8 @@ const initialConfig = {
 const WelcomeListController = () => {
 	const [config, setConfig] = React.useState<IInitialConfig>(initialConfig);
 
-	const { name, birthday, delivery } = welcomeApi.getSchema();
-	const aniversarioSchReduzido = { birthday, name, delivery };
+	const { title, type, typeMulti } = welcomeApi.getSchema();
+	const welcomeSchReduzido = { title, type, typeMulti, createdAt: { type: Date, label: 'Criado em' } };
 	const navigate = useNavigate();
 
 	const { sortProperties, filter } = config;
@@ -47,15 +47,16 @@ const WelcomeListController = () => {
 		[sortProperties.field]: sortProperties.sortAscending ? 1 : -1
 	};
 
-	const { loading, aniversarios } = useTracker(() => {
+	const { loading, welcomeTasks } = useTracker(() => {
 		const subHandle = welcomeApi.subscribe('welcomeList', filter, {
 			sort
 		});
-		const aniversarios = subHandle?.ready() ? welcomeApi.find(filter, { sort }).fetch() : [];
+
+		const welcomeTasks = subHandle?.ready() ? welcomeApi.find(filter, { sort }).fetch() : [];
 		return {
-			aniversarios,
+			welcomeTasks,
 			loading: !!subHandle && !subHandle.ready(),
-			total: subHandle ? subHandle.total : aniversarios.length
+			total: subHandle ? subHandle.total : welcomeTasks.length
 		};
 	}, [config]);
 
@@ -73,7 +74,7 @@ const WelcomeListController = () => {
 		const delayedSearch = setTimeout(() => {
 			setConfig((prev) => ({
 				...prev,
-				filter: { ...prev.filter, name: { $regex: value.trim(), $options: 'i' } }
+				filter: { ...prev.filter, title: { $regex: value.trim(), $options: 'i' } }
 			}));
 		}, 1000);
 		return () => clearTimeout(delayedSearch);
@@ -98,13 +99,13 @@ const WelcomeListController = () => {
 		() => ({
 			onAddButtonClick,
 			onDeleteButtonClick,
-			welcomeList: aniversarios,
-			schema: aniversarioSchReduzido,
+			welcomeList: welcomeTasks,
+			schema: welcomeSchReduzido,
 			loading,
 			onChangeTextField,
 			onChangeCategory: onSelectedCategory
 		}),
-		[aniversarios, loading]
+		[welcomeTasks, loading]
 	);
 
 	return (

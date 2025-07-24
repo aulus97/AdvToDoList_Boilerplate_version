@@ -1,6 +1,6 @@
 import WelcomeContainer from '../welcomeContainer';
 import { Recurso } from './recursos';
-import { IRoute } from '/imports/modules/modulesTypings';
+import { IRoute } from '../../../modules/modulesTypings';
 
 export const welcomeRouterList: (IRoute | null)[] = [
 	{

@@ -1,8 +1,8 @@
 import { ElementType } from 'react';
 import { styled } from '@mui/material/styles';
 import Box, { BoxProps } from '@mui/material/Box';
-import { sysSizing } from '/imports/ui/materialui/styles';
-import {SysSectionPaddingXY} from "/imports/ui/layoutComponents/sysLayoutComponents";
+import { sysSizing } from '../../../../ui/materialui/styles';
+import { SysSectionPaddingXY } from '../../../../ui/layoutComponents/sysLayoutComponents';
 
 interface IWelcomeDetailStyles {
 	Container: ElementType<BoxProps>;
@@ -10,17 +10,15 @@ interface IWelcomeDetailStyles {
 	Body: ElementType<BoxProps>;
 	Footer: ElementType<BoxProps>;
 	FormColumn: ElementType<BoxProps>;
-	Image: ElementType;
 }
 
 const WelcomeDetailStyles: IWelcomeDetailStyles = {
 	Container: styled(SysSectionPaddingXY)(() => ({
-    flex: 1,
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
 		alignItems: 'flex-start',
-		gap: sysSizing.spacingFixedLg
+		gap: sysSizing.spacingFixedMd
 	})),
 	Header: styled(Box)({
 		display: 'flex',
@@ -37,7 +35,7 @@ const WelcomeDetailStyles: IWelcomeDetailStyles = {
 		width: '100%',
 		gap: '64px',
 		[theme.breakpoints.down('md')]: {
-			flexDirection: 'column-reverse',
+			flexDirection: 'column',
 			gap: sysSizing.spacingFixedMd
 		}
 	})),
@@ -48,7 +46,7 @@ const WelcomeDetailStyles: IWelcomeDetailStyles = {
 		alignItems: 'center',
 		width: '100%',
 		gap: sysSizing.spacingRemMd,
-		marginTop: 'auto'
+		marginTop: '40px'
 	}),
 	FormColumn: styled(Box)({
 		width: '100%',
@@ -57,14 +55,7 @@ const WelcomeDetailStyles: IWelcomeDetailStyles = {
 		justifyContent: 'flex-start',
 		alignItems: 'flex-start',
 		gap: sysSizing.spacingFixedLg
-	}),
-  Image: styled('img')(({theme}) => ({
-    width: '100%',
-    [theme.breakpoints.down('md')]: {
-      maxWidth: '500px',
-      margin: 'auto'
-    }
-  }))
+	})
 };
 
 export default WelcomeDetailStyles;

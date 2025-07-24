@@ -1,12 +1,11 @@
-import React, { useCallback } from 'react';
-import { IDefaultContainerProps } from '/imports/typings/BoilerplateDefaultTypings';
+import React from 'react';
+import { IDefaultContainerProps } from '../../typings/BoilerplateDefaultTypings';
 import { useParams } from 'react-router-dom';
-import WelcomeListController from '/imports/modules/welcome/pages/welcomeList/welcomeListController';
-import WelcomeDetailController from '/imports/modules/welcome/pages/welcomeDetail/welcomeDetailContoller';
-import { hasValue } from '/imports/libs/hasValue';
+import WelcomeListController from '../../modules/welcome/pages/welcomeList/welcomeListController';
+import WelcomeDetailController from '../../modules/welcome/pages/welcomeDetail/welcomeDetailContoller';
 
 export interface IWelcomeModuleContext {
-	state?: 'create' | 'view' | 'edit';
+	state?: string;
 	id?: string;
 }
 
@@ -18,15 +17,14 @@ export default (props: IDefaultContainerProps) => {
 	const id = welcomeId ?? props.id;
 
 	const validState = ['view', 'edit', 'create'];
-  const isValideState = hasValue(state) && validState.includes(state!);
 
-	const renderPage = useCallback(() => {
-    if (!isValideState) return <WelcomeListController />;
+	const renderPage = () => {
+		if (!state || !validState.includes(state)) return <WelcomeListController />;
 		return <WelcomeDetailController />;
-	}, [isValideState]);
+	};
 
 	const providerValue = {
-		state: !isValideState ? undefined : state as 'create' | 'view' | 'edit' | undefined,
+		state,
 		id
 	};
 	return <WelcomeModuleContext.Provider value={providerValue}>{renderPage()}</WelcomeModuleContext.Provider>;
