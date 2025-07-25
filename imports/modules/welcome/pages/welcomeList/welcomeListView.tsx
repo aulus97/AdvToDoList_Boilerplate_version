@@ -55,7 +55,7 @@ const WelcomeListView = () => {
 					<ComplexTable
 						data={controller.welcomeList}
 						schema={controller.schema}
-						onRowClick={(row) => navigate('/todos/view/' + row.id)}
+						onRowClick={(row) => navigate('/toDos/view/' + row.id)}
 						searchPlaceholder={'Pesquisar exemplo'}
 					/>
 				</Box>
