@@ -29,7 +29,7 @@ export const welcomeSch: ISchema<IWelcome> = {
 	check: {
 		type: String,
 		label: 'Situação',
-		defaultValue: {value: 'NC', label: 'Não Concluída'},
+		defaultValue: 'NC',
 		optional: true,
 		options: () => [
 			{ value: 'NC', label: 'Não Concluída' },
@@ -49,7 +49,7 @@ export interface IWelcome extends IDoc {
 	image: string;
 	title: string;
 	description: string;
-	check: Array<string>;
+	check: string;
 	date: Date;
 	files: object[];
 	createdBy?: string;

@@ -15,10 +15,16 @@ import { SysUploadFile } from '../../../../ui/components/sysFormFields/sysUpload
 import SysSlider from '../../../../ui/components/sysFormFields/sysSlider/sysSliderField';
 import { SysLocationField } from '../../../../ui/components/sysFormFields/sysLocationField/sysLocationField';
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
+import { Chip } from '@mui/material';
 
 enum situationColors {
     NC='#29b6f6',//info color from MUI palette for dark themes
     CC='#66bb6a',//success color from MUI palette for dark themes
+};
+
+enum getStatusLabel {
+    NC='Não Concluída',
+    CC='Concluída',
 };
 
 const WelcomeDetailView = () => {
@@ -62,17 +68,25 @@ const WelcomeDetailView = () => {
 							max={200}
 						/>
 					</FormColumn>
-					{isEdit ? (
-						<FormColumn>
-							<SysCheckBox name="check" childrenAlignment="row" />
-						</FormColumn> ) 
-					: (isView && (
-						<FormColumn>
-							<Typography variant="body1" sx={{/* color: controller.document.check[0] ?? 'inherit' */}}> 
-								Status: {controller.document.check}
+					{(isEdit) && ( // Render SysSelectField in edit/create mode
+						<SysSelectField name="check" placeholder="Selecionar status" />
+					)}
+					{isView && ( // Render Chip in view mode
+						<FormColumn sx={{ marginTop: '16px' }}>
+							<Typography sx={{ marginBottom: '8px' }}>
+								Status:
 							</Typography>
-						</FormColumn> ) )
-					}
+							<Chip
+								label={controller.document.check == 'CC' ? getStatusLabel.CC : getStatusLabel.NC}
+								variant="outlined"
+								sx={{
+									borderColor: controller.document.check == 'CC' ? situationColors.CC: situationColors.NC,
+									color: controller.document.check == 'CC' ? situationColors.CC: situationColors.NC,
+									backgroundColor: 'transparent'
+								}}
+							/>
+						</FormColumn>
+					)}
 				</Body>
 				<Footer>
 					{!isView && (

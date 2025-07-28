@@ -12,6 +12,18 @@ import { SysSelectField } from '../../../../ui/components/sysFormFields/sysSelec
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { SysFab } from '../../../../ui/components/sysFab/sysFab';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
+import { Chip } from '@mui/material';
+import { GridRenderCellParams } from '@mui/x-data-grid';
+
+enum situationColors {
+    NC = '#29b6f6', // info color from MUI palette for dark themes
+    CC = '#66bb6a', // success color from MUI palette for dark themes
+};
+
+enum getStatusLabel {
+    NC = 'Não Concluída',
+    CC = 'Concluída',
+};
 
 const WelcomeListView = () => {
 	const controller = React.useContext(WelcomeListControllerContext);
@@ -21,6 +33,24 @@ const WelcomeListView = () => {
 
 	//const options = [{ value: '', label: 'Nenhum' }, ...(controller.schema.type.options?.() ?? [])];
 
+	const renderStatusChip = (params: GridRenderCellParams) => { // Use 'any' or GridRenderCellParams if imported
+        const status = params.value; // The value of the 'check' field ('NC' or 'CC')
+        const label = status === 'CC' ? getStatusLabel.CC : getStatusLabel.NC;
+        const color = status === 'CC' ? situationColors.CC : situationColors.NC;
+
+        return (
+            <Chip
+                label={label}
+                variant="outlined"
+                sx={{
+                    borderColor: color,
+                    color: color,
+                    backgroundColor: 'transparent'
+                }}
+            />
+        );
+    };
+	
 	return (
 		<Container>
 			<SearchContainer sx={{ alignItems: 'center' }}>
@@ -56,7 +86,8 @@ const WelcomeListView = () => {
 						data={controller.welcomeList}
 						schema={controller.schema}
 						onRowClick={(row) => navigate('/toDos/view/' + row.id)}
-						searchPlaceholder={'Pesquisar exemplo'}
+						renderCellModified={renderStatusChip}
+						fieldsRenderCellModified={{check: true}}
 					/>
 				</Box>
 			)}
