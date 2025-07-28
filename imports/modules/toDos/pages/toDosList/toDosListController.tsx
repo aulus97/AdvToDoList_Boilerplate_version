@@ -15,6 +15,7 @@ interface IInitialConfig {
 }
 
 interface IToDosListContollerContext {
+	onUpdateStatus(task: IToDos): unknown;
 	onAddButtonClick: () => void;
 	onDeleteButtonClick: (row: any) => void;
 	todoList: IToDos[];
@@ -69,6 +70,11 @@ const ToDosListController = () => {
 		toDosApi.remove(row);
 	}, []);
 
+	const onUpdateStatus = useCallback((task: IToDos) => {
+		toDosApi.update(task);
+	}, []);
+
+
 	const onChangeTextField = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
 		const { value } = event.target;
 		const delayedSearch = setTimeout(() => {
@@ -103,7 +109,8 @@ const ToDosListController = () => {
 			schema: toDosSchReduzido,
 			loading,
 			onChangeTextField,
-			onChangeCategory: onSelectedCategory
+			onChangeCategory: onSelectedCategory,
+			onUpdateStatus
 		}),
 		[toDosTasks, loading, onAddButtonClick, onDeleteButtonClick, onChangeTextField, onSelectedCategory ] //boa prática do ESLint-disable-line react-hooks/exhaustive-deps
 	);

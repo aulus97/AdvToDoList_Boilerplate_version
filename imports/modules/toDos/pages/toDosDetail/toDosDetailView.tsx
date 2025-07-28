@@ -84,14 +84,10 @@ const ToDosDetailView = () => {
 						showNumberCharactersTyped
 						max={200}
 					/>
-					{(isEdit) && ( // Render SysSelectField in edit/create mode
-						<SysSelectField name="check" placeholder="Selecionar status" />
-					)}
-					{isView && ( // Render Chip in view mode
+					
+					{(isView || isEdit) && ( // Render Chip in view mode
 						<FormColumn sx={{ marginTop: '16px' }}>
-							<Typography sx={{ marginBottom: '8px' }}>
-								Status:
-							</Typography>
+							<Typography variant="subtitle1">Situação do Item</Typography>
 							<Chip
 								label={controller.document.check == 'CC' ? getStatusLabel.CC : getStatusLabel.NC}
 								variant="outlined"
@@ -100,6 +96,10 @@ const ToDosDetailView = () => {
 									color: controller.document.check == 'CC' ? situationColors.CC: situationColors.NC,
 									backgroundColor: 'transparent'
 								}}
+								onClick={(e) => {
+									e.stopPropagation();
+									const updatedTask = { ...controller.document, check: controller.document.check === 'CC' ? 'NC' : 'CC' };
+									controller.onUpdateStatus(updatedTask);} }
 							/>
 						</FormColumn>
 					)}
@@ -114,7 +114,7 @@ const ToDosDetailView = () => {
 					<SysFormButton>Salvar</SysFormButton>
 				</Footer>
 			</SysForm>
-			{JSON.stringify(controller.document)}
+			{/* JSON.stringify(controller.document) */}
 		</Container>
 	);
 };

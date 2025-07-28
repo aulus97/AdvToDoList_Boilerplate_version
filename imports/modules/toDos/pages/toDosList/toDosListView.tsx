@@ -98,10 +98,7 @@ const ToDosListView = () => {
 										secondaryTypographyProps={{ noWrap: false }}
 									/>
 								</Box>
-								<ListItemButton alignItems='center'  
-									sx={{backgroundColor:'transparent',
-										/* color: situationColors[task.check] ?? 'inherit' */}}
-								>{task.check}</ListItemButton>
+								
 								<Box onClick={(e) => e.stopPropagation()} 
 									sx={{
 										display: 'flex',
@@ -118,6 +115,10 @@ const ToDosListView = () => {
 											color: task.check == 'CC' ? situationColors.CC: situationColors.NC,
 											backgroundColor: 'transparent'
 										}}
+										onClick={(e) => {
+											e.stopPropagation();
+											const updatedTask = { ...task, check: task.check === 'CC' ? 'NC' : 'CC' };
+											controller.onUpdateStatus(updatedTask);} }
 									/>
 									<IconButton edge="end" aria-label="edit" >
 										<SysIcon name={'edit'} onClick={(e) => navigate('/toDos/edit/' + task._id)}/>
@@ -125,8 +126,8 @@ const ToDosListView = () => {
 
 									<IconButton edge="end" aria-label="delete" >
 										<DeleteIcon onClick={(e)=> DeleteDialog({
-											showDialog: sysLayoutContext.showDialog,
-											closeDialog: sysLayoutContext.closeDialog,
+											showDialog: sysLayoutContext.showModal,
+											closeDialog: sysLayoutContext.closeModal,
 											title: `Excluir dado ${task.title}`,
 											message: `Tem certeza que deseja excluir o arquivo ${task.title}?`,
 											onDeleteConfirm: () => {

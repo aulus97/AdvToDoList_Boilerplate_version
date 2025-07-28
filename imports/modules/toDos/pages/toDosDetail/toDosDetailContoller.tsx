@@ -10,6 +10,7 @@ import { IMeteorError } from '../../../../typings/BoilerplateDefaultTypings';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
 
 interface IToDosDetailContollerContext {
+	onUpdateStatus(task: IToDos): unknown;
 	closePage: () => void;
 	document: IToDos;
 	loading: boolean;
@@ -71,7 +72,8 @@ const ToDosDetailController = () => {
 				loading,
 				schema: toDosApi.getSchema(),
 				onSubmit,
-				changeToEdit
+				changeToEdit,
+				onUpdateStatus: (task: IToDos) => toDosApi.update(task)
 			}}>
 			{<ToDosDetailView />}
 		</ToDosDetailControllerContext.Provider>
