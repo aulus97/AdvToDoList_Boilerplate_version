@@ -16,10 +16,16 @@ import SysSlider from '../../../../ui/components/sysFormFields/sysSlider/sysSlid
 import { SysLocationField } from '../../../../ui/components/sysFormFields/sysLocationField/sysLocationField';
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { json } from 'body-parser';
+import { Chip } from '@mui/material';
 
 enum situationColors {
     NC='#29b6f6',//info color from MUI palette for dark themes
     CC='#66bb6a',//success color from MUI palette for dark themes
+};
+
+enum getStatusLabel {
+    NC='Não Concluída',
+    CC='Concluída',
 };
 
 const ToDosDetailView = () => {
@@ -32,6 +38,19 @@ const ToDosDetailView = () => {
 	/*const statusKey = Array.isArray(controller.document.check)
 	? controller.document.check[0]
 	: controller.document.check;*/
+
+	/* const getStatusLabel = (statusValue: string) => {
+		switch(statusValue) {
+			case 'NC': return 'Não Concluída';
+			case 'CC': return 'Concluída';
+			default: return 'Não Concluída';
+		}
+	};
+
+	const getStatusColor = (statusValue: string) => {
+		return statusValue === 'CC' ? situationColors.CC : situationColors.NC;
+	};
+ */
 	return (
 		<Container>
 			<Header>
@@ -55,28 +74,36 @@ const ToDosDetailView = () => {
 				onSubmit={controller.onSubmit}
 				loading={controller.loading}>
 				<Body>
-					<FormColumn>
-						<SysTextField name="title" placeholder="Ex.: Item XX" />
-						<SysTextField
-							name="description"
-							placeholder="Acrescente informações sobre o item (3 linhas)"
-							multiline
-							rows={3}
-							showNumberCharactersTyped
-							max={200}
-						/>
-					</FormColumn>
-					{isEdit ? (
-						<FormColumn>
-							<SysCheckBox name="check" childrenAlignment="row" />
-						</FormColumn> ) 
-					: (isView && (
-						<FormColumn>
-							<Typography variant="body1" sx={{/* color: controller.document.check[0] ?? 'inherit' */}}> 
-								Status: {controller.document.check}
+				<FormColumn>
+					<SysTextField name="title" placeholder="Ex.: Item XX" />
+					<SysTextField
+						name="description"
+						placeholder="Acrescente informações sobre o item (3 linhas)"
+						multiline
+						rows={3}
+						showNumberCharactersTyped
+						max={200}
+					/>
+					{(isEdit || isCreate) && ( // Render SysSelectField in edit/create mode
+						<SysSelectField name="check" placeholder="Selecionar status" />
+					)}
+					{isView && ( // Render Chip in view mode
+						<FormColumn sx={{ marginTop: '16px' }}>
+							<Typography sx={{ marginBottom: '8px' }}>
+								Status:
 							</Typography>
-						</FormColumn> ) )
-					}
+							<Chip
+								label={controller.document.check == 'CC' ? getStatusLabel.CC : getStatusLabel.NC}
+								variant="outlined"
+								sx={{
+									borderColor: controller.document.check == 'CC' ? situationColors.CC: situationColors.NC,
+									color: controller.document.check == 'CC' ? situationColors.CC: situationColors.NC,
+									backgroundColor: 'transparent'
+								}}
+							/>
+						</FormColumn>
+					)}
+				</FormColumn>
 				</Body>
 				<Footer>
 					{!isView && (

@@ -12,13 +12,18 @@ import { SysSelectField } from '../../../../ui/components/sysFormFields/sysSelec
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { SysFab } from '../../../../ui/components/sysFab/sysFab';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
-import { Checkbox, Divider, FormControlLabel, IconButton, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Checkbox, Chip, Divider, FormControlLabel, IconButton, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { set } from 'lodash';
 
 enum situationColors {
     NC='#29b6f6',//info color from MUI palette for dark themes
     CC='#66bb6a',//success color from MUI palette for dark themes
+};
+
+enum getStatusLabel {
+    NC='Não Concluída',
+    CC='Concluída',
 };
 
 const ToDosListView = () => {
@@ -105,6 +110,15 @@ const ToDosListView = () => {
 										gap: 1,
 									}}
 								>
+									<Chip
+										label={task.check == 'CC' ? getStatusLabel.CC : getStatusLabel.NC}
+										variant="outlined"
+										sx={{
+											borderColor: task.check == 'CC' ? situationColors.CC: situationColors.NC,
+											color: task.check == 'CC' ? situationColors.CC: situationColors.NC,
+											backgroundColor: 'transparent'
+										}}
+									/>
 									<IconButton edge="end" aria-label="edit" >
 										<SysIcon name={'edit'} onClick={(e) => navigate('/toDos/edit/' + task._id)}/>
 									</IconButton>
