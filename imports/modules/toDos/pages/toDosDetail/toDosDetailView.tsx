@@ -84,7 +84,7 @@ const ToDosDetailView = () => {
 						showNumberCharactersTyped
 						max={200}
 					/>
-					{(isEdit || isCreate) && ( // Render SysSelectField in edit/create mode
+					{(isEdit) && ( // Render SysSelectField in edit/create mode
 						<SysSelectField name="check" placeholder="Selecionar status" />
 					)}
 					{isView && ( // Render Chip in view mode
