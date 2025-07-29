@@ -1,4 +1,6 @@
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
+import { Meteor } from 'meteor/meteor';
+import { useTracker } from 'meteor/react-meteor-data';
 import AppLayoutContext, { IAppLayoutContext, ICloseDialog, ICloseNotification, ISysThemeOptions } from './appLayoutContext';
 import { IShowNotificationProps, ShowNotification } from '/imports/ui/appComponents/showNotification/showNotification';
 import { ISysGeneralComponentsCommon } from '/imports/typings/BoilerplateDefaultTypings';
@@ -15,6 +17,9 @@ import sysRoutes from '../routes/routes';
 const defaultState: ISysGeneralComponentsCommon = { open: false };
 
 const AppLayoutProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
+    const userId = useTracker(() => Meteor.userId(), []);
+    const user = useTracker(() => Meteor.user(), []);
+
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 	const userAgent = window.navigator.userAgent.toLowerCase();
 	const isMobile = /iphone|ipod|android|ie|blackberry|fennec/.test(userAgent);
@@ -154,6 +159,8 @@ const AppLayoutProvider: React.FC<{ children?: ReactNode }> = ({ children }) => 
 
     const contextValues: IAppLayoutContext = useMemo(() => ({
         ...themeOptions,
+        userId,
+        user,
         defaultTemplate: defaultTemplate,
         showNotification: handleShowNotification,
         closeNotification: handleCloseNotification,
@@ -165,7 +172,7 @@ const AppLayoutProvider: React.FC<{ children?: ReactNode }> = ({ children }) => 
         closeModal: handleCloseModal,
         showWindow: handleShowWindow,
         closeWindow: handleCloseWindow
-    }), [themeOptions]);
+    }), [themeOptions, userId, user]);
 
     return (
         <ThemeProvider theme={getTheme(themeOptions)}>

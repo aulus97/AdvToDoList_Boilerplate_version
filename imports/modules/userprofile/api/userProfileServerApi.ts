@@ -59,7 +59,7 @@ class UserProfileServerApi extends ProductServerBase<IUserProfile> {
 		this.addPublicationMeteorUsers();
 		this.addUserProfileProfilePublication();
 		this.serverInsert = this.serverInsert.bind(this);
-		this.afterInsert = this.afterInsert.bind(this);
+		//this.afterInsert = this.afterInsert.bind(this);
 		this.beforeInsert = this.beforeInsert.bind(this);
 		this.beforeUpdate = this.beforeUpdate.bind(this);
 		this.beforeRemove = this.beforeRemove.bind(this);
@@ -68,7 +68,7 @@ class UserProfileServerApi extends ProductServerBase<IUserProfile> {
 
 		this.noImagePath = `${Meteor.absoluteUrl()}images/wireframe/user_no_photo.png`;
 
-		this.afterInsert = this.afterInsert.bind(this);
+		//this.afterInsert = this.afterInsert.bind(this);
 
 		this.registerMethod('sendVerificationEmail', async (userData: IUserProfile) => {
 			check(userData, Object);
@@ -349,7 +349,7 @@ class UserProfileServerApi extends ProductServerBase<IUserProfile> {
 		return super.beforeInsert(docObj, context);
 	}
 
-	async afterInsert(doc: IUserProfileEstendido, _context: IContext) {
+	/* async afterInsert(doc: IUserProfileEstendido, _context: IContext) {
 		if (Meteor.isServer) {
 			if (doc.password) {
 				Accounts.sendVerificationEmail(doc._id!);
@@ -358,7 +358,7 @@ class UserProfileServerApi extends ProductServerBase<IUserProfile> {
 			}
 		}
 	}
-
+ */
 	async beforeUpdate(docObj: IUserProfile, context: IContext) {
 		const user: IUserProfile = await getUserServer();
 		if (

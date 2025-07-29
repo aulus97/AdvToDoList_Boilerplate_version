@@ -6,7 +6,7 @@ export const toDosRouterList: (IRoute | null)[] = [
 	{
 		path: '/toDos/:screenState/:toDosId',
 		component: ToDosContainer,
-		isProtected: true,
+		isProtected: false,
 		resources: [Recurso.TODOS_VIEW]
 	},
 	{
@@ -18,7 +18,7 @@ export const toDosRouterList: (IRoute | null)[] = [
 	{
 		path: '/toDos',
 		component: ToDosContainer,
-		isProtected: true,
+		isProtected: false,
 		resources: [Recurso.TODOS_VIEW]
 	}
 ];

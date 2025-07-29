@@ -32,10 +32,11 @@ enum getStatusLabel {
 };
 
 const ToDosListView = () => {
-	const controller = React.useContext(ToDosListControllerContext);
+	const controller = useContext(ToDosListControllerContext);
 	const sysLayoutContext = useContext<IAppLayoutContext>(AppLayoutContext);
 	const navigate = useNavigate();
 	const { Container, LoadingContainer, SearchContainer } = ToDosListStyles;
+	const { userId } = useContext(AppLayoutContext);
 
 	//const options = [{ value: '', label: 'Nenhum' }, ...(controller.schema.type.options?.() ?? [])];
 
@@ -87,15 +88,7 @@ const ToDosListView = () => {
 								gap: 2,
 								width: '100%',
 							}}>
-								<FormControlLabel
-									control={
-										<Checkbox
-										//checked={!!controller.todoList.check}
-										//onChange={() => onCheckboxClick(task)}
-										/>
-									}
-									label=""
-								/>
+								
 								{task.image ? 
 									(<IconButton > task.image </IconButton>) 
 								: (<IconButton> <SysIcon name={'task'} /> </IconButton>) }
@@ -133,16 +126,24 @@ const ToDosListView = () => {
 											backgroundColor: 'transparent'
 										}}
 										onClick={(e) => {
-											e.stopPropagation();
+											//e.stopPropagation();
+											if(task.createdBy == userId) {
 											const updatedTask = { ...task, check: task.check === 'CC' ? 'NC' : 'CC' };
-											controller.onUpdateStatus(updatedTask);} }
+											controller.onUpdateStatus(updatedTask);}
+											else {
+												sysLayoutContext.showNotification({
+													type: 'error',
+													title: 'Operação não realizada!',
+													message: 'Você não pode alterar o status de um item que não foi criado por você!'
+												});}
+											} }
 									/>
 									<IconButton edge="end" aria-label="edit" >
-										<SysIcon name={'edit'} onClick={(e) => navigate('/toDos/edit/' + task._id)}/>
+										<SysIcon name={'edit'} onClick={(e) => {task.createdBy == userId && navigate('/toDos/edit/' + task._id) } }/>
 									</IconButton>
-
+								
 									<IconButton edge="end" aria-label="delete" >
-										<DeleteIcon onClick={(e)=> DeleteDialog({
+										<DeleteIcon onClick={(e)=> { task.createdBy == userId && DeleteDialog({
 											showDialog: sysLayoutContext.showDialog,
 											closeDialog: sysLayoutContext.closeDialog,
 											title: `Excluir dado ${task.title}`,
@@ -153,8 +154,10 @@ const ToDosListView = () => {
 													message: 'Excluído com sucesso!'
 												});
 											}
-										})}/>
+											})
+										}}/>
 									</IconButton>
+
 								</Box>
 							</ListItem>
 						</List>

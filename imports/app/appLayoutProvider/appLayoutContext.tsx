@@ -26,6 +26,8 @@ interface ISysThemeOptions {
 
 interface IAppLayoutContext extends ISysThemeOptions{
     readonly defaultTemplate: ISysTemplate;
+    userId?: string | null;
+    user?: Meteor.User | null;
     showNotification: (options: IShowNotificationProps) => void;
     closeNotification: (props?: ICloseNotification | {}) => void;
     showDialog: (options: IShowDialogProps) => void;

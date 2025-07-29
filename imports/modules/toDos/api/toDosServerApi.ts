@@ -34,12 +34,12 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 						},
 					});
 			},
-			async (doc: Partial<IToDos>) : Promise<Partial<IToDos & { username: string } >> => {
+			async (doc: Partial<IToDos>) : Promise<Partial<IToDos & { username: string, userId: string } >> => {
 				const user: IUserProfile = await userprofileServerApi.getCollectionInstance().findOneAsync(
 					{ _id: doc.createdBy },
-					{fields: { username: 1 } },
+					{fields: { username: 1 , _id: 1} },
 			);
-				return{...doc, username: user?.username || 'Usuário Desconhecido' };
+				return{...doc, username: user?.username || 'Usuário Desconhecido', userId: user?._id || 'UserId not found!' };
 			}
 		);
 
@@ -60,12 +60,12 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 						},
 					});
 			},
-			async (doc: Partial<IToDos> & { username: string }) : Promise<Partial<IToDos  >> => {
+			async (doc: Partial<IToDos>) : Promise<Partial<IToDos & { username: string, userId: string } >> => {
 				const user: IUserProfile = await userprofileServerApi.getCollectionInstance().findOneAsync(
 					{ _id: doc.createdBy },
-					{fields: { username: 1 } },
+					{fields: { username: 1, _id: 1} },
 			);
-				return{...doc, username: user?.username || 'Usuário Desconhecido' };
+				return{...doc, username: user?.username || 'Usuário Desconhecido', userId: user?._id || 'UserId not found!' };
 			}
 		);
 

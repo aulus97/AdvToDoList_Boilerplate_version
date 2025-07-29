@@ -11,7 +11,9 @@ const _getAllValues = (obj: any) => Object.keys(obj).map(key => obj[key]);
 type MapRolesRecursos = Record<RoleType, Array<string>>; 
 
 const _mapRolesRecursos: MapRolesRecursos = {
-	[RoleType.PUBLICO]: [],
+	[RoleType.PUBLICO]: [
+		ToDos.TODOS_VIEW,
+	],
 	[RoleType.USUARIO]: [
 		..._getAllValues(Exemplo),
 		..._getAllValues(ToDos),
