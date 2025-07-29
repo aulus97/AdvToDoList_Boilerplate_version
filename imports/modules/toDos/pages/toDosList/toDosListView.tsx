@@ -15,6 +15,11 @@ import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvi
 import { Checkbox, Chip, Divider, FormControlLabel, IconButton, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { set } from 'lodash';
+import FormDialog from '/imports/ui/appComponents/showDialog/custom/formDialog/formDialog';
+import ToDosDetailView from '../toDosDetail/toDosDetailView';
+import { IShowDialogProps } from '/imports/ui/appComponents/showDialog/showDialog';
+import { ToDosModuleContext } from '../../toDosContainer';
+import ToDosDetailModal from '../toDosDetail/toDosDetailModal';
 
 enum situationColors {
     NC='#29b6f6',//info color from MUI palette for dark themes
@@ -60,8 +65,20 @@ const ToDosListView = () => {
 			) : (
 				<Box sx={{ width: '100%' }}>
 					{controller.todoList.map((task) => (
-						<List>
-							<ListItem onClick={() => navigate('/toDos/view/' + task._id)}  key={task._id} 
+						<List key={task._id}>
+							<ListItem onClick={() => FormDialog({
+								showDialog: sysLayoutContext.showDialog as (options?: IShowDialogProps) => void,
+								closeDialog: sysLayoutContext.closeDialog,
+								title: task.title || 'Título Desconhecido',
+								form: (
+									<ToDosDetailModal taskId={task._id} closeModal={sysLayoutContext.closeDialog} />
+								),
+								/* onSubmit: () => {
+									sysLayoutContext.showNotification({
+										message: 'Dados salvos!'
+									}); 
+								} */
+							})/* navigate('/toDos/view/' + task._id) */}   
 							sx={{
 								cursor: 'pointer',
 								display: 'flex',
@@ -126,8 +143,8 @@ const ToDosListView = () => {
 
 									<IconButton edge="end" aria-label="delete" >
 										<DeleteIcon onClick={(e)=> DeleteDialog({
-											showDialog: sysLayoutContext.showModal,
-											closeDialog: sysLayoutContext.closeModal,
+											showDialog: sysLayoutContext.showDialog,
+											closeDialog: sysLayoutContext.closeDialog,
 											title: `Excluir dado ${task.title}`,
 											message: `Tem certeza que deseja excluir o arquivo ${task.title}?`,
 											onDeleteConfirm: () => {

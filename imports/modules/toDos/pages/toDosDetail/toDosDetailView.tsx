@@ -30,7 +30,7 @@ enum getStatusLabel {
 
 const ToDosDetailView = () => {
 	const controller = useContext(ToDosDetailControllerContext);
-	const { state } = useContext(ToDosModuleContext);
+	const { state, id } = useContext(ToDosModuleContext);
 	const isView = state === 'view';
 	const isEdit = state === 'edit';
 	const isCreate = state === 'create';
@@ -51,6 +51,9 @@ const ToDosDetailView = () => {
 		return statusValue === 'CC' ? situationColors.CC : situationColors.NC;
 	};
  */
+	const documentTitle = controller.document?.title || 'Carregando...';
+	const documentDescription = controller.document?.description || 'Carregando...';
+
 	return (
 		<Container>
 			<Header>
@@ -85,7 +88,7 @@ const ToDosDetailView = () => {
 						max={200}
 					/>
 					
-					{(isView || isEdit) && ( // Render Chip in view mode
+					{(isView || isEdit) && controller.document && ( // Render Chip in view mode
 						<FormColumn sx={{ marginTop: '16px' }}>
 							<Typography variant="subtitle1">Situação do Item</Typography>
 							<Chip
