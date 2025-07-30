@@ -11,6 +11,7 @@ import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvi
 
 interface IToDosDetailContollerContext {
 	onUpdateStatus(task: IToDos): unknown;
+	onUpdatePrivacy(task: IToDos): unknown;
 	closePage: () => void;
 	document: IToDos;
 	loading: boolean;
@@ -58,12 +59,9 @@ const ToDosDetailController = (props: IToDosDetailControllerProps) => { // Accep
 	const changeToEdit = useCallback((id: string) => {
 		// If in modal, you might want to close the view modal and open an edit modal
 		// For now, it will navigate to a new page for editing, which is usually fine
-		if (props.isModal && props.closeModal) {
+		if (props.isModal && props.closeModal)
             props.closeModal(); // Close the current view modal
-            navigate(`/toDos/edit/${id}`); // Then navigate to the edit page
-        } else {
-            navigate(`/toDos/edit/${id}`);
-        }
+        navigate(`/toDos/edit/${id}`); 
 	}, [navigate, props.isModal, props.closeModal]);
 
 	const onSubmit = useCallback((doc: IToDos) => {
@@ -73,7 +71,7 @@ const ToDosDetailController = (props: IToDosDetailControllerProps) => { // Accep
 				showNotification({
 					type: 'success',
 					title: 'Operação realizada!',
-					message: `O exemplo foi ${selectedAction === 'update' ? 'atualizado' : 'cadastrado'} com sucesso!`
+					message: `A tarefa foi ${selectedAction === 'update' ? 'atualizada' : 'cadastrada'} com sucesso!`
 				});
                 if (props.isModal && props.closeModal) {
                     props.closeModal(); // Close modal on successful submit
@@ -90,6 +88,24 @@ const ToDosDetailController = (props: IToDosDetailControllerProps) => { // Accep
 		});
 	}, [state, showNotification, closePage, props.isModal, props.closeModal]); // Add modal props to dependencies
 
+	const onUpdatePrivacy = useCallback((task: IToDos) => {
+		toDosApi.update(task, (e: IMeteorError) => {
+			if (!e) {
+				showNotification({
+					type: 'success',
+					title: 'Privacidade Atualizada!',
+					message: `A privacidade da tarefa foi atualizada com sucesso!`
+				});
+			} else {
+				showNotification({
+					type: 'error',
+					title: 'Erro ao Atualizar Privacidade!',
+					message: `Erro ao atualizar a privacidade: ${e.reason}`
+				});
+			}
+		});
+	}, [showNotification]); 
+
 	const providerValue: IToDosDetailContollerContext = useMemo(
 		() => ({
 			closePage,
@@ -98,14 +114,15 @@ const ToDosDetailController = (props: IToDosDetailControllerProps) => { // Accep
 			schema: toDosApi.getSchema(),
 			onSubmit,
 			changeToEdit,
-			onUpdateStatus: (task: IToDos) => toDosApi.update(task)
+			onUpdateStatus: (task: IToDos) => toDosApi.update(task),
+			onUpdatePrivacy
 		}),
-		[closePage, document, id, loading, onSubmit, changeToEdit] // Add id to dependencies
+		[closePage, document, id, loading, onSubmit, changeToEdit, onUpdatePrivacy] // Add id to dependencies
 	);
 
 	return (
 		<ToDosDetailControllerContext.Provider value={providerValue}>
-			{/* Render ToDosDetailView, it will consume the context */}
+			{/* ToDosDetailView will consume the context */}
 			{<ToDosDetailView />}
 		</ToDosDetailControllerContext.Provider>
 	);

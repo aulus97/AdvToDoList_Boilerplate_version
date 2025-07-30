@@ -114,7 +114,7 @@ const SysSwitch: React.FC<ISysSwitchProps & {
 						key={name}
 						sx={sxMap?.switch}
 						value={valueState || false}
-						checked={valueState}
+						checked={valueState === checkedValue}
 						onChange={handleToggleSwitch}
 						disabled={disabled || loading || readOnly}
 					/>

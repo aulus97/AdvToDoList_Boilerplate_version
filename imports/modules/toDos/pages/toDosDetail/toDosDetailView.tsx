@@ -50,22 +50,7 @@ const ToDosDetailView = () => {
 	const { Container, Body, Header, Footer, FormColumn } = ToDosDetailStyles;
 	const { userId } = useContext(AppLayoutContext);
 	const isOwner = controller.document?.createdBy === userId;
-	/*const statusKey = Array.isArray(controller.document.check)
-	? controller.document.check[0]
-	: controller.document.check;*/
-
-	/* const getStatusLabel = (statusValue: string) => {
-		switch(statusValue) {
-			case 'NC': return 'Não Concluída';
-			case 'CC': return 'Concluída';
-			default: return 'Não Concluída';
-		}
-	};
-
-	const getStatusColor = (statusValue: string) => {
-		return statusValue === 'CC' ? situationColors.CC : situationColors.NC;
-	};
- */
+	
 	const documentTitle = controller.document?.title || 'Carregando...';
 	const documentDescription = controller.document?.description || 'Carregando...';
 
@@ -113,27 +98,24 @@ const ToDosDetailView = () => {
 						label="Privacidade"
 						checkedValue="PRIVATE"
 						uncheckedValue="PUBLIC"
+						value={controller.document?.privacy /* === 'PRIVATE' ? getPrivacyLabel.PRIVATE : getPrivacyLabel.PUBLIC */}
+						//defaultValue={controller.document?.privacy === 'PRIVATE' ? 'PRIVATE' : 'PUBLIC'}
+						onChange={(e) => {
+							const newPrivacy = e.target.checked ? 'PRIVATE' : 'PUBLIC';
+							controller.onUpdatePrivacy({ ...controller.document, privacy: newPrivacy });
+						}} // Handle change directly
 						valueLabel={controller.document?.privacy === 'PRIVATE' ? getPrivacyLabel.PRIVATE : getPrivacyLabel.PUBLIC}
-						defaultValue={controller.document?.privacy === 'PRIVATE' ? 'PRIVATE' : 'PUBLIC'}
 						sxMap={{
 							switch: {
-								'& .MuiSwitch-thumb': {
-									color: controller.document?.privacy === 'PRIVATE'
-										? privacyColors.PRIVATE
-										: privacyColors.PUBLIC,
-								},
-								'& .MuiSwitch-switchBase.Mui-checked': {
-									color: privacyColors.PRIVATE,
-								},
+								// Track (path of the switch)
 								'& .MuiSwitch-track': {
-									backgroundColor: controller.document?.privacy === 'PRIVATE'
+									backgroundColor:
+									controller.document?.privacy === 'PRIVATE'
 										? privacyColors.PRIVATE
 										: privacyColors.PUBLIC,
 								},
-								'& .MuiSwitch-switchBase + .MuiSwitch-track': {
-									backgroundColor: controller.document?.privacy === 'PRIVATE'
-										? privacyColors.PRIVATE
-										: privacyColors.PUBLIC,
+								'& .Mui-checked + .MuiSwitch-track': {
+									backgroundColor: privacyColors.PRIVATE,
 								},
 							}}}
 						/>
