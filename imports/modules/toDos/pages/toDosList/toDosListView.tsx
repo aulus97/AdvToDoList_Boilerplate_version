@@ -101,7 +101,9 @@ const ToDosListView = () => {
 								
 								{task.image ? 
 									(<IconButton > task.image </IconButton>) 
-								: (<IconButton> <SysIcon name={'task'} /> </IconButton>) }
+								: task.check === 'CC' ? 
+									(<IconButton> <SysIcon name={'checkCircle'} color='success' /> </IconButton>) 
+								: (<IconButton> <SysIcon name={'task'} color='warning'/> </IconButton>) }
 								<Typography variant="h6" component="div" noWrap 
 									sx={{
 										width: { xs: '100%', sm: '20%' },
