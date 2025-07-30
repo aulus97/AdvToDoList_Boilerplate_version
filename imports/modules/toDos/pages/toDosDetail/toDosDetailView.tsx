@@ -16,7 +16,9 @@ import SysSlider from '../../../../ui/components/sysFormFields/sysSlider/sysSlid
 import { SysLocationField } from '../../../../ui/components/sysFormFields/sysLocationField/sysLocationField';
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { json } from 'body-parser';
-import { Chip } from '@mui/material';
+import { Chip, Switch } from '@mui/material';
+import SysSwitch from '/imports/ui/components/sysFormFields/sysSwitch/sysSwitch';
+import AppLayoutContext from '/imports/app/appLayoutProvider/appLayoutContext';
 
 enum situationColors {
     NC='#29b6f6',//info color from MUI palette for dark themes
@@ -28,13 +30,26 @@ enum getStatusLabel {
     CC='Concluída',
 };
 
+enum privacyColors {
+    PRIVATE='#c62828',//error color from MUI palette for dark themes
+	PUBLIC='#66bb6a',//success color from MUI palette for dark themes
+};
+
+enum getPrivacyLabel {
+    PRIVATE='Privado',
+    PUBLIC='Público',
+};
+
+
 const ToDosDetailView = () => {
 	const controller = useContext(ToDosDetailControllerContext);
-	const { state, id } = useContext(ToDosModuleContext);
+	const { state } = useContext(ToDosModuleContext);
 	const isView = state === 'view';
 	const isEdit = state === 'edit';
 	const isCreate = state === 'create';
 	const { Container, Body, Header, Footer, FormColumn } = ToDosDetailStyles;
+	const { userId } = useContext(AppLayoutContext);
+	const isOwner = controller.document?.createdBy === userId;
 	/*const statusKey = Array.isArray(controller.document.check)
 	? controller.document.check[0]
 	: controller.document.check;*/
@@ -74,7 +89,11 @@ const ToDosDetailView = () => {
 				mode={state as 'create' | 'view' | 'edit'}
 				schema={controller.schema}
 				doc={controller.document}
-				onSubmit={controller.onSubmit}
+				//onSubmit={controller.onSubmit}
+				onSubmit={(data) => {
+					console.log('Final form data:', data);
+					controller.onSubmit(data);
+				}}
 				loading={controller.loading}>
 				<Body>
 				<FormColumn>
@@ -87,8 +106,39 @@ const ToDosDetailView = () => {
 						showNumberCharactersTyped
 						max={200}
 					/>
-					
-					{(isView || isEdit) && controller.document && ( // Render Chip in view mode
+					<FormColumn>
+						<Typography variant="subtitle1">Privacidade</Typography>
+						<SysSwitch
+						name="privacy"
+						label="Privacidade"
+						checkedValue="PRIVATE"
+						uncheckedValue="PUBLIC"
+						valueLabel={controller.document?.privacy === 'PRIVATE' ? getPrivacyLabel.PRIVATE : getPrivacyLabel.PUBLIC}
+						defaultValue={controller.document?.privacy === 'PRIVATE' ? 'PRIVATE' : 'PUBLIC'}
+						sxMap={{
+							switch: {
+								'& .MuiSwitch-thumb': {
+									color: controller.document?.privacy === 'PRIVATE'
+										? privacyColors.PRIVATE
+										: privacyColors.PUBLIC,
+								},
+								'& .MuiSwitch-switchBase.Mui-checked': {
+									color: privacyColors.PRIVATE,
+								},
+								'& .MuiSwitch-track': {
+									backgroundColor: controller.document?.privacy === 'PRIVATE'
+										? privacyColors.PRIVATE
+										: privacyColors.PUBLIC,
+								},
+								'& .MuiSwitch-switchBase + .MuiSwitch-track': {
+									backgroundColor: controller.document?.privacy === 'PRIVATE'
+										? privacyColors.PRIVATE
+										: privacyColors.PUBLIC,
+								},
+							}}}
+						/>
+					</FormColumn>
+					{(isView || isEdit) && isOwner && controller.document && ( 
 						<FormColumn sx={{ marginTop: '16px' }}>
 							<Typography variant="subtitle1">Situação do Item</Typography>
 							<Chip
@@ -101,7 +151,8 @@ const ToDosDetailView = () => {
 								}}
 								onClick={(e) => {
 									e.stopPropagation();
-									const updatedTask = { ...controller.document, check: controller.document.check === 'CC' ? 'NC' : 'CC' };
+									const updatedTask = { ...controller.document, 
+										check: controller.document.check === 'CC' ? 'NC' : 'CC' };
 									controller.onUpdateStatus(updatedTask);} }
 							/>
 						</FormColumn>
@@ -109,12 +160,12 @@ const ToDosDetailView = () => {
 				</FormColumn>
 				</Body>
 				<Footer>
-					{!isView && (
+					{isView && (
 						<Button variant="outlined" startIcon={<SysIcon name={'close'} />} onClick={controller.closePage}>
 							Cancelar
 						</Button>
 					)}
-					<SysFormButton>Salvar</SysFormButton>
+					{(isEdit || isCreate) && isOwner && (<SysFormButton>Salvar</SysFormButton>)}
 				</Footer>
 			</SysForm>
 			{/* JSON.stringify(controller.document) */}

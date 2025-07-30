@@ -31,6 +31,7 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 							check: 1,
 							image: 1,
 							createdBy: 1,
+							privacy: 1,
 						},
 					});
 			},
@@ -57,6 +58,7 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 							check: 1,
 							image: 1,
 							createdBy: 1,
+							privacy: 1,
 						},
 					});
 			},
@@ -83,6 +85,7 @@ class ToDosServerApi extends ProductServerBase<IToDos> {
 								check: 1,
 								image: 1,
 								createdBy: 1,
+								privacy: 1,
 							},
 						});
 					},

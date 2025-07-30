@@ -31,6 +31,16 @@ enum getStatusLabel {
     CC='Concluída',
 };
 
+enum privacyColors {
+    PRIVATE='#c62828',//error color from MUI palette for dark themes
+	PUBLIC='#66bb6a',//success color from MUI palette for dark themes
+};
+
+enum getPrivacyLabel {
+    PRIVATE='Privado',
+    PUBLIC='Público',
+};
+
 const ToDosListView = () => {
 	const controller = useContext(ToDosListControllerContext);
 	const sysLayoutContext = useContext<IAppLayoutContext>(AppLayoutContext);
@@ -117,6 +127,16 @@ const ToDosListView = () => {
 										gap: 1,
 									}}
 								>
+									<Chip 
+										label={task?.privacy === 'PRIVATE' ? getPrivacyLabel.PRIVATE : getPrivacyLabel.PUBLIC}
+										variant="outlined"
+										sx={{
+											borderColor: task?.privacy === 'PRIVATE' ? privacyColors.PRIVATE : privacyColors.PUBLIC,
+											color: task?.privacy === 'PRIVATE' ? privacyColors.PRIVATE : privacyColors.PUBLIC,
+											backgroundColor: 'transparent',
+										}}
+										
+									/>
 									<Chip
 										label={task.check == 'CC' ? getStatusLabel.CC : getStatusLabel.NC}
 										variant="outlined"
@@ -139,23 +159,23 @@ const ToDosListView = () => {
 											} }
 									/>
 									<IconButton edge="end" aria-label="edit" >
-										<SysIcon name={'edit'} onClick={(e) => {task.createdBy == userId && navigate('/toDos/edit/' + task._id) } }/>
+										<SysIcon name={'edit'} onClick={(e) => {task.createdBy === userId && navigate('/toDos/edit/' + task._id) } }/>
 									</IconButton>
 								
 									<IconButton edge="end" aria-label="delete" >
-										<DeleteIcon onClick={(e)=> { task.createdBy == userId && DeleteDialog({
-											showDialog: sysLayoutContext.showDialog,
-											closeDialog: sysLayoutContext.closeDialog,
-											title: `Excluir dado ${task.title}`,
-											message: `Tem certeza que deseja excluir o arquivo ${task.title}?`,
-											onDeleteConfirm: () => {
-												controller.onDeleteButtonClick(task);
-												sysLayoutContext.showNotification({
-													message: 'Excluído com sucesso!'
-												});
-											}
+										<DeleteIcon onClick={(e)=> { task.createdBy === userId && 
+											DeleteDialog({
+												showDialog: sysLayoutContext.showDialog,
+												closeDialog: sysLayoutContext.closeDialog,
+												title: `Excluir dado ${task.title}`,
+												message: `Tem certeza que deseja excluir o arquivo ${task.title}?`,
+												onDeleteConfirm: () => {
+													controller.onDeleteButtonClick(task);
+													sysLayoutContext.showNotification({message: 'Excluído com sucesso!'});
+												}
 											})
-										}}/>
+										}}
+										/>
 									</IconButton>
 
 								</Box>

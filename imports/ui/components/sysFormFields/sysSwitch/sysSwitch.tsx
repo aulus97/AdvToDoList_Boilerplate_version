@@ -18,7 +18,12 @@ interface ISysSwitchProps extends ISysFormComponent<SwitchProps> {
 	valueLabel?: string;
 }
 
-const SysSwitch: React.FC<ISysSwitchProps> = ({
+const SysSwitch: React.FC<ISysSwitchProps & {
+	checkedValue?: any;
+	uncheckedValue?: any;
+}> = ({
+	checkedValue = true,
+	uncheckedValue = false,
 	name,
 	label,
 	value,
@@ -56,6 +61,14 @@ const SysSwitch: React.FC<ISysSwitchProps> = ({
 	const [visibleState, setVisibleState] = useState<boolean>(refObject?.current.isVisible ?? true);
 	const [errorState, setErrorState] = useState<string | undefined>(error);
 
+	useEffect(() => {
+		if (value !== undefined) {
+			setValueState(value);
+		} else if (defaultValue !== undefined) {
+			setValueState(defaultValue);
+		}
+	}, [value, defaultValue]);
+	
 	if (!visibleState) return null;
 
 	if (inSysFormContext)
@@ -68,9 +81,14 @@ const SysSwitch: React.FC<ISysSwitchProps> = ({
 		});
 
 	const handleToggleSwitch = (e: React.BaseSyntheticEvent) => {
-		setValueState(!valueState);
+		const newValue = valueState === checkedValue ? uncheckedValue : checkedValue;
+		setValueState(newValue);
 		onChange?.(e);
 	};
+	/* const handleToggleSwitch = (e: React.BaseSyntheticEvent) => {
+		setValueState(!valueState);
+		onChange?.(e);
+	}; */
 
 	useEffect(() => {
 		controllerSysForm?.onChangeComponentValue({ refComponent: refObject!, value: valueState });

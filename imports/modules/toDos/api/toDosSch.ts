@@ -2,6 +2,16 @@ import { IDoc } from '../../../typings/IDoc';
 import { ISchema } from '../../../typings/ISchema';
 
 export const toDosSch: ISchema<IToDos> = {
+	privacy: {
+		type: String,
+		label: 'Privacidade',
+		defaultValue: 'PUBLIC',
+		optional: false,
+		options: () => [
+			{ value: 'PUBLIC', label: 'Pública' },
+			{ value: 'PRIVATE', label: 'Privada' }
+		]
+	},
 	image: {
 		type: String,
 		label: 'Imagem',
@@ -47,6 +57,7 @@ export const toDosSch: ISchema<IToDos> = {
 
 export interface IToDos extends IDoc {
 	username: string;
+	privacy: string;
 	image: string;
 	title: string;
 	description: string;
