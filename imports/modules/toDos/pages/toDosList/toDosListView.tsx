@@ -12,7 +12,7 @@ import { SysSelectField } from '../../../../ui/components/sysFormFields/sysSelec
 import SysIcon from '../../../../ui/components/sysIcon/sysIcon';
 import { SysFab } from '../../../../ui/components/sysFab/sysFab';
 import AppLayoutContext, { IAppLayoutContext } from '/imports/app/appLayoutProvider/appLayoutContext';
-import { Checkbox, Chip, Divider, FormControlLabel, IconButton, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Checkbox, Chip, Divider, FormControlLabel, IconButton, List, ListItem, ListItemButton, ListItemText, TablePagination } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { set } from 'lodash';
 import FormDialog from '/imports/ui/appComponents/showDialog/custom/formDialog/formDialog';
@@ -187,6 +187,23 @@ const ToDosListView = () => {
 				</Box>
 			)}
 
+			<TablePagination
+			component="div"
+			count={typeof controller.totalCount === 'number' ? controller.totalCount : 0}
+			page={typeof controller.currentPage === 'number' ? controller.currentPage - 1 : 0}
+			onPageChange={(event, newPage) => {
+				controller.onPageChange(newPage + 1); // convert to 1-based index
+			}}
+			rowsPerPage={typeof controller.pageSize === 'number' ? controller.pageSize : 4}
+			onRowsPerPageChange={(event) => {
+				const newSize = parseInt(event.target.value, 10);
+				controller.onPageSizeChange(newSize);
+			}}
+			rowsPerPageOptions={[4]}
+			labelRowsPerPage="Itens por página"
+			labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+			sx={{ width: '100%' }}
+			/>
 			<SysFab
 				variant="extended"
 				text="Adicionar"

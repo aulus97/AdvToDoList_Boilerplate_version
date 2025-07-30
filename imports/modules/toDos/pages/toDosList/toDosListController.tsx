@@ -8,6 +8,10 @@ import { IToDos } from '../../api/toDosSch';
 import { toDosApi } from '../../api/toDosApi';
 
 interface IInitialConfig {
+	pageProperties: {
+		currentPage: number;
+		pageSize: number;
+	};
 	sortProperties: { field: string; sortAscending: boolean };
 	filter: Object;
 	searchBy: string | null;
@@ -23,6 +27,11 @@ interface IToDosListContollerContext {
 	loading: boolean;
 	onChangeTextField: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	//onChangeCategory: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	totalCount: number;
+	pageSize: number;
+	currentPage: number;
+	onPageChange: (page: number) => void;
+	onPageSizeChange: (size: number) => void;
 }
 
 export const ToDosListControllerContext = React.createContext<IToDosListContollerContext>(
@@ -30,6 +39,10 @@ export const ToDosListControllerContext = React.createContext<IToDosListContolle
 );
 
 const initialConfig = {
+	pageProperties: {
+		currentPage: 1,
+		pageSize: 4
+	},
 	sortProperties: { field: 'createdAt', sortAscending: true },
 	filter: {},
 	searchBy: null,
@@ -43,21 +56,38 @@ const ToDosListController = () => {
 	const toDosSchReduzido = { title, description, createdAt: { type: Date, label: 'Criado em' }, check: { type: String, label: 'Situação' } };
 	const navigate = useNavigate();
 
-	const { sortProperties, filter } = config;
+	const { sortProperties, filter, pageProperties } = config;
 	const sort = {
 		[sortProperties.field]: sortProperties.sortAscending ? 1 : -1
 	};
 
-	const { loading, toDosTasks } = useTracker(() => {
+	const limit = pageProperties.pageSize;
+	const skip = (pageProperties.currentPage - 1) * pageProperties.pageSize;
+
+
+	const {
+		loading,
+		toDosTasks,
+		total
+	}: {
+		loading: boolean;
+		toDosTasks: IToDos[];
+		total: number;
+	} = useTracker(() => {
 		const subHandle = toDosApi.subscribe('toDosList', filter, {
-			sort
+			sort,
+			limit,
+			skip
 		});
 
-		const toDosTasks = subHandle?.ready() ? toDosApi.find(filter, { sort }).fetch() : [];
+		const ready = subHandle?.ready?.() ?? false;
+		const tasks = ready ? toDosApi.find(filter, { sort, limit, skip }).fetch() : [];
+		const totalCount = ready ? toDosApi.find(filter).count() : tasks.length;
+
 		return {
-			toDosTasks,
-			loading: !!subHandle && !subHandle.ready(),
-			total: subHandle ? subHandle.total : toDosTasks.length
+			toDosTasks: tasks,
+			loading: !ready,
+			total: totalCount
 		};
 	}, [config]);
 
@@ -101,18 +131,43 @@ const ToDosListController = () => {
 		setConfig((prev) => ({ ...prev, filter: { ...prev.filter, type: value } }));
 	}, []);
 
+	const onPageChange = useCallback((newPage: number) => {
+		setConfig((prev) => ({
+		...prev,
+		pageProperties: {
+			...prev.pageProperties,
+			currentPage: newPage
+		}
+		}));
+	}, []);
+	
+	const onPageSizeChange = useCallback((newSize: number) => {
+		setConfig((prev) => ({
+		...prev,
+		pageProperties: {
+			currentPage: 1,
+			pageSize: newSize
+		}
+		}));
+	}, []);
+
 	const providerValues: IToDosListContollerContext = useMemo(
 		() => ({
+			todoList: toDosTasks,
 			onAddButtonClick,
 			onDeleteButtonClick,
-			todoList: toDosTasks,
 			schema: toDosSchReduzido,
 			loading,
 			onChangeTextField,
 			//onChangeCategory: onSelectedCategory,
-			onUpdateStatus
+			onUpdateStatus,
+			totalCount: total,
+			currentPage: pageProperties.currentPage,
+			pageSize: pageProperties.pageSize,
+			onPageChange,
+			onPageSizeChange
 		}),
-		[toDosTasks, loading, onAddButtonClick, onDeleteButtonClick, onChangeTextField, onSelectedCategory ] //boa prática do ESLint-disable-line react-hooks/exhaustive-deps
+		[toDosTasks, loading, total, pageProperties, onAddButtonClick, onDeleteButtonClick, onChangeTextField, onUpdateStatus, onPageChange, onPageSizeChange ] //boa prática do ESLint-disable-line react-hooks/exhaustive-deps
 	);
 
 	return (
