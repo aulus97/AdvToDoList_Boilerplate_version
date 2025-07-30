@@ -22,7 +22,7 @@ interface IToDosListContollerContext {
 	schema: ISchema<any>;
 	loading: boolean;
 	onChangeTextField: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	onChangeCategory: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	//onChangeCategory: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ToDosListControllerContext = React.createContext<IToDosListContollerContext>(
@@ -80,7 +80,7 @@ const ToDosListController = () => {
 		const delayedSearch = setTimeout(() => {
 			setConfig((prev) => ({
 				...prev,
-				filter: { ...prev.filter, title: { $regex: value.trim(), $options: 'i' } }
+				filter: { ...prev.filter, description: { $regex: value.trim(), $options: 'i' } }
 			}));
 		}, 1000);
 		return () => clearTimeout(delayedSearch);
@@ -109,7 +109,7 @@ const ToDosListController = () => {
 			schema: toDosSchReduzido,
 			loading,
 			onChangeTextField,
-			onChangeCategory: onSelectedCategory,
+			//onChangeCategory: onSelectedCategory,
 			onUpdateStatus
 		}),
 		[toDosTasks, loading, onAddButtonClick, onDeleteButtonClick, onChangeTextField, onSelectedCategory ] //boa prática do ESLint-disable-line react-hooks/exhaustive-deps
