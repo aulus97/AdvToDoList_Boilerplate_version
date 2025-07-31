@@ -76,7 +76,7 @@
 					FormDialog({
 						showDialog: sysLayoutContext.showDialog as (options?: IShowDialogProps) => void,
 						closeDialog: sysLayoutContext.closeDialog,
-						title: task.title || 'Título Desconhecido',
+						title: 'Tarefa'/* task.title || 'Título Desconhecido'*/,
 						form: <ToDosDetailModal taskId={task._id} closeModal={sysLayoutContext.closeDialog} />,
 						hideDefaultActions: false
 					})
@@ -190,42 +190,53 @@
 		)}
 
 		<Box
-			component="footer" 
-			sx={{ position: 'fixed', bottom: 0, left: 0, right: 0,
-				width: '100%',
-				backgroundColor: 'background.paper',
-				borderTop: '1px solid #ccc',
-				zIndex: 10
-			}}
+		sx={{
+			width: '100%',
+			/* get rid of the little inner scroller */
+			/* overflowX: 'auto', */
+			pt: 1,
+			borderTop: '1px solid',
+			borderColor: 'divider',
+			bgcolor: 'background.paper'
+		}}
 		>
 			<TablePagination
-			component="div"
-			labelRowsPerPage="Itens por página"
-			labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
-			count={typeof controller.totalCount === 'number' ? controller.totalCount : 0}
-			page={controller.currentPage - 1}
-			onPageChange={(event, newPage) => controller.onPageChange(newPage + 1)}
-			rowsPerPage={controller.pageSize}
-			onRowsPerPageChange={(event) => controller.onPageSizeChange(parseInt(event.target.value, 10))}
-			rowsPerPageOptions={[4]}
-			sx={{
-				minWidth: 300,
-				'.MuiTablePagination-toolbar': {
-				flexDirection: { xs: 'column', sm: 'row' },
-				flexWrap: 'wrap',
-				alignItems: { xs: 'flex-start', sm: 'center' },
-				gap: 1,
-				padding: 1
-				},
-				'.MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows': {
-				fontSize: '0.75rem'
-				},
-				'.MuiInputBase-root': {
-				fontSize: '0.75rem'
+				component="div"
+				count={controller.totalCount}
+				page={controller.currentPage - 1}
+				rowsPerPage={controller.pageSize}
+				rowsPerPageOptions={[4]}
+				onPageChange={(_, newPage) => controller.onPageChange(newPage + 1)}
+				onRowsPerPageChange={e =>
+				controller.onPageSizeChange(parseInt(e.target.value, 10))
 				}
-			}}
+				labelRowsPerPage="Itens por página"
+				labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+				sx={{
+				/* make toolbar wrap on xs and align right on sm+ */
+				'.MuiTablePagination-toolbar': {
+					flexDirection: { xs: 'column', sm: 'row' },
+					justifyContent: { xs: 'center', sm: 'flex-end' },
+					alignItems: 'center',
+					flexWrap: 'wrap',
+					gap: 1,
+					p: 1
+				},
+				/* shrink the icon buttons & SVGs */
+				'.MuiTablePagination-actions .MuiIconButton-root': {
+					p: 0.5
+				},
+				'.MuiTablePagination-actions .MuiSvgIcon-root': {
+					fontSize: '1rem'
+				},
+				/* optional: reduce font-size for labels */
+				'.MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows': {
+					fontSize: '0.75rem'
+				}
+				}}
 			/>
 		</Box>
+
 
 		<SysFab
 			variant="extended"
