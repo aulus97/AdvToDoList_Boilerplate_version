@@ -16,9 +16,10 @@ interface IFormDialogProps extends IShowDialogProps {
 	// Adicione aqui os demais métodos e propriedades que o componente de diálogo precisa.
 	onSubmit?: () => void;
 	form?: ReactNode;
+	hideDefaultActions?: boolean;
 }
 
-function FormDialog({ showDialog, closeDialog, onSubmit, title, form, ...props }: IFormDialogProps) {
+function FormDialog({ showDialog, closeDialog, onSubmit, title, form, hideDefaultActions=true, ...props }: IFormDialogProps) {
 	showDialog({
 		...props,
 		sx: formDialogStyles.box,
@@ -28,7 +29,7 @@ function FormDialog({ showDialog, closeDialog, onSubmit, title, form, ...props }
 			</DialogTitle>
 		),
 		body: form,
-		actions: (
+		actions: hideDefaultActions && (
 			<DialogActions sx={formDialogStyles.actions}>
 				<Button variant="outlined" startIcon={<SysIcon name={'close'} />} onClick={closeDialog}>
 					Cancelar

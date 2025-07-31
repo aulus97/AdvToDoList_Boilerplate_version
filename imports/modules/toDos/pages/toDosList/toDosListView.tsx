@@ -77,7 +77,8 @@
 						showDialog: sysLayoutContext.showDialog as (options?: IShowDialogProps) => void,
 						closeDialog: sysLayoutContext.closeDialog,
 						title: task.title || 'Título Desconhecido',
-						form: <ToDosDetailModal taskId={task._id} closeModal={sysLayoutContext.closeDialog} />
+						form: <ToDosDetailModal taskId={task._id} closeModal={sysLayoutContext.closeDialog} />,
+						hideDefaultActions: false
 					})
 					}
 					sx={{

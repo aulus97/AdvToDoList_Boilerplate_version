@@ -143,8 +143,8 @@ const ToDosDetailView = () => {
 				</Body>
 				<Footer>
 					{isView && (
-						<Button variant="outlined" startIcon={<SysIcon name={'close'} />} onClick={controller.closePage}>
-							Cancelar
+						<Button variant="outlined" startIcon={<SysIcon name={'arrowBack'} />} onClick={controller.closePage}>
+							Voltar
 						</Button>
 					)}
 					{(isEdit || isCreate) && isOwner && (<SysFormButton>Salvar</SysFormButton>)}
